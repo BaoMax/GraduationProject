@@ -1,0 +1,17 @@
+<div class="item">
+	<div class="carousel-caption" style="top:35%">
+		<h3 style="text-align:center;">选择题</h3>
+		<p><span><?=$i+1?>.</span><?=$options[$i]['title']?></p>
+		<p class="optionA"><b>A.</b><?=$options[$i]['answerA']?></p>
+		<p class="optionB"><b>B.</b><?=$options[$i]['answerB']?></p>
+		<p class="optionC"><b>C.</b><?=$options[$i]['answerC']?></p>
+		<p class="optionD"><b>D.</b><?=$options[$i]['answerD']?></p>
+		<a class="btn btn-block btn-lg btn-info" href="#options<?=$i?>" data-toggle="collapse" data-parent="#carousel">查看答案</a>
+		<div id="options<?=$i?>" class="panel-collapse collapse">
+		    <div class="panel-body">
+		        <p><b>答案:</b><?=$options[$i]['answer']?></p>
+		        <p><b>解释:</b><?=$options[$i]['explain']?></p>
+		    </div>
+		</div>  	
+	</div>
+</div>

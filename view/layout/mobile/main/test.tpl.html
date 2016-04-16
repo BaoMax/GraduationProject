@@ -1,0 +1,157 @@
+<?php 
+$tfile = 'view' . DS . 'layout' . DS  . g('layout') . DS . header2 . '.tpl.html' ;
+if( file_exists( AROOT . $tfile ) ) include( AROOT . $tfile );
+else @include( CROOT . $tfile );
+?>
+<section>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<h3>一.填空题</h3>
+				<?php
+					if( isset( $completion ) && is_array( $completion ) && count( $completion ) > 0){
+						$i = 0;
+						while ( $i < count( $completion ) ) {
+							$tfile = 'view' . DS . 'layout' . DS  . g('layout') . DS . completion . '.tpl.html' ;
+							if( file_exists( AROOT . $tfile ) ) include( AROOT . $tfile );
+							else @include( CROOT . $tfile );
+							$i++;
+						}
+					}
+				?>
+				<h3>二.选择题</h3>
+				<?php
+					if( isset( $options ) && is_array( $options ) && count( $options ) > 0){
+						$i = 0;
+						while ( $i < count( $options ) ) {
+							$tfile = 'view' . DS . 'layout' . DS  . g('layout') . DS . options . '.tpl.html' ;
+							if( file_exists( AROOT . $tfile ) ) include( AROOT . $tfile );
+							else @include( CROOT . $tfile );
+							$i++;
+						}
+					}
+				?>		
+			</div>
+		</div>
+		<a class="btn btn-block btn-lg btn-success" id="done" style="margin:20px 0;">提交并查看答案</a>
+	</div>
+</section>
+<script type="text/javascript">
+	function cont(){
+			var url = window.location.href.slice(0,window.location.href.indexOf("?"));
+			var course_id = getUrlParam("course_id");
+			var chapter_id = getUrlParam("chapter_id");
+			var student_id = $.cookie("UserName");
+			var chapter_max = $.cookie("max_"+student_id);
+			var course_name = $.cookie("value_"+student_id);
+			// if(Number(chapter_max) == Number(chapter_id)){
+			    window.location.href = url + "?c=main&a=exam&course_id="+course_id+"&course_name="+course_name+"&student_id="+student_id;
+			// }else{
+			//     window.location.href = url + "?c=main&a=preview&course_id="+course_id+"&chapter_id="+(Number(chapter_id)+1);
+			// }
+	}
+
+	$(document).ready(function  (argument) {
+		var answer = [];
+		<?php
+		if( isset( $completion ) && is_array( $completion )){
+			foreach ($completion as $value) {
+				# code...
+			?>
+				var temp = {};
+				temp["answer"] = "<?=$value['answer']?>";
+				temp["explain"] = "<?=$value['explain']?>";
+				answer.push(temp);
+			<?php
+			}
+			
+		}
+		if( isset( $options ) && is_array( $options )){
+			foreach ($options as $value) {
+				# code...
+			?>
+				var temp = {};
+				temp["answer"] = "<?=$value['answer']?>";
+				temp["explain"] = "<?=$value['explain']?>";
+				answer.push(temp);
+			<?php
+			}
+			
+		}
+		?>
+		$(".well").delegate("input[type='radio']","click",function(){
+			var name = $(this).attr("name");
+			console.log(name);
+			if($(this).is(':checked')){
+				console.log("aaa");
+				$("input[name="+name+"]").each(function(){
+					$(this).next().css("color","black");
+				});
+				$(this).next().css("color","red");
+			}
+		});
+
+
+		$("#done").click(function(){
+			var myanswer = [];
+			var options = $("input[type='radio']:checked") || [];
+			var completion = $("input[type='text']") || [];
+			completion.each(function(){
+				myanswer.push($.trim($(this).val()));
+			});
+			options.each(function(){
+				myanswer.push($.trim($(this).val()));
+			});
+			var score = Number(0);
+			console.log("score"+score);
+			var step = Number(100/answer.length).toFixed(2);
+			for(var i = 0;i<myanswer.length;i++){
+				if (myanswer[i] == answer[i]["answer"]) {
+					score += Number(step);
+				};
+			}
+			console.log("score"+score);
+			// dialog("您测试的成绩为："+score);
+			var url_link = window.location.href.slice(0,window.location.href.indexOf("?"));
+			var course_id = getUrlParam("course_id");
+		    var chapter_id = getUrlParam("chapter_id");
+		    var student_id = $.cookie("UserName");
+			var chapter_max = $.cookie("chapter_max");
+
+			$.ajax({
+				type:"POST",
+				url:url_link + "?c=main&a=record",
+				data:"type=test&course_id="+course_id+"&chapter_id="+chapter_id+"&student_id="+student_id+"&score="+score,
+		    	success:function(data){
+		    		if(data == "1"){
+		    			$("#header_title").text("答案与分析");
+		    			$("input[type='radio']").each(function(){
+		    				$(this).css("display","none");
+		    			});
+
+		    			$("h3").eq(0).before("<div class='page-header'><p>亲爱的"+student_id+"同学:</p><p>您本次测试的成绩为："+score+"</p></div>");
+		    			if(Number(chapter_max) == Number(chapter_id)){
+		    				$("#done").after("<a class='btn btn-block btn-lg btn-success' onclick='cont()' id='continue'>开始期末考试</a>");
+		    			}else{
+		    				$("#done").after("<a class='btn btn-block btn-lg btn-success' onclick='cont()' id='continue'>继续学习</a>");
+		    			}
+		    			$("#done").remove();
+		    		
+		    			var well = $(".well");
+		    			for(var i = 0;i<well.length;i++){
+		    				var str = "<p style='color:red'><label>答案:</label>"+answer[i]["answer"]+"</p><p style='color:red'><label>解释:</label>"+answer[i]["explain"]+"</p>"
+							well.eq(i).append(str);
+		    			}
+		    			// $(window).scrollTop(0);
+		    			$('html,body').animate({scrollTop:0},'slow');
+		    		}else{
+		    			dialog("数据库错误");
+		    		}
+		    	},
+		    	error: function (request) {	
+                	 dialog("Connection error");
+           		}
+			});
+		});
+	});
+</script>

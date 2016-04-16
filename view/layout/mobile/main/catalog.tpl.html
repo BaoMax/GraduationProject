@@ -1,0 +1,57 @@
+<?php 
+$tfile = 'view' . DS . 'layout' . DS  . g('layout') . DS . header . '.tpl.html' ;
+if( file_exists( AROOT . $tfile ) ) include( AROOT . $tfile );
+else @include( CROOT . $tfile );
+?>
+<div class="section">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="panel-group" id="catalog">
+					<?php if( isset($chapter) && is_array( $chapter ) ){
+						$i = 0;
+						while( $i < count($chapter)){
+							$tfile = 'view' . DS . 'layout' . DS  . g('layout') . DS . collapse . '.tpl.html' ;
+							if( file_exists( AROOT . $tfile ) ) include( AROOT . $tfile );
+							else @include( CROOT . $tfile );
+							$i++;
+						}
+					}?>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	$(document).ready(function () {
+		// body...
+		
+		$("#catalog").delegate("a.title","click",function(){
+			console.log($(this).hasClass("collapsed"));
+			$("#catalog a.title").each(function(){
+				$(this).prev().css("transition","all 0.5 ease");
+				$(this).prev().css("transform","rotate(0deg)");
+			});
+			if($(this).hasClass("collapsed")){
+				$(this).prev().css("transform","rotate(90deg)");
+			}else{
+				$(this).prev().css("transform","rotate(0deg)");
+			}
+		});
+		$("#catalog").delegate("a.catalog_preview","click",function(){
+			var url = window.location.href;
+		    url = url.slice(0,url.indexOf("?"));
+		    window.location.href = url + "?c=main&a=preview&course_id="+$(this).attr("data-course")+"&chapter_id="+$(this).attr("data-chapter");
+		});
+		$("#catalog").delegate("a.catalog_practice","click",function(){
+			var url = window.location.href;
+		    url = url.slice(0,url.indexOf("?"));
+		    window.location.href = url + "?c=main&a=practice&course_id="+$(this).attr("data-course")+"&chapter_id="+$(this).attr("data-chapter");
+		});
+		$("#catalog").delegate("a.catalog_test","click",function(){
+			var url = window.location.href;
+		    url = url.slice(0,url.indexOf("?"));
+		    window.location.href = url + "?c=main&a=test&course_id="+$(this).attr("data-course")+"&chapter_id="+$(this).attr("data-chapter");
+		});
+	});
+</script>

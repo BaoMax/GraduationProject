@@ -1,0 +1,13 @@
+<div class="item">
+	<div class="carousel-caption">
+		<h3 style="text-align:center;">填空题</h3>
+			<p><span><?=$i+1?>.</span><?=$completion[$i]['title']?></p>
+			<a class="btn btn-block btn-lg btn-info"  href="#completion<?=$i?>" data-toggle="collapse" data-parent="#carousel" >查看答案</a>
+			<div id="completion<?=$i?>" class="panel-collapse collapse">
+		      	<div class="panel-body">
+		          	<p><b>答案:</b><?=$completion[$i]['answer']?></p>
+		          	<p><b>解释:</b><?=$completion[$i]['explain']?></p>
+		      	</div>
+		    </div>  	
+    </div>
+</div>

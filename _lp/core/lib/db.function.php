@@ -17,8 +17,8 @@ function db( $host = null , $port = null , $user = null , $password = null , $db
 		if( $user == null ) $user = $db_config['db_user'];
 		if( $password == null ) $password = $db_config['db_password'];
 		if( $db_name == null ) $db_name = $db_config['db_name'];
-		
-		if( !$GLOBALS['LP_'.$db_key] = mysql_connect( $host.':'.$port , $user , $password , true ) )
+
+		if( !$GLOBALS['LP_'.$db_key] = mysqli_connect( $host , $user , $password ) )
 		{
 			//
 			echo 'can\'t connect to database';
@@ -28,7 +28,7 @@ function db( $host = null , $port = null , $user = null , $password = null , $db
 		{
 			if( $db_name != '' )
 			{
-				if( !mysql_select_db( $db_name , $GLOBALS['LP_'.$db_key] ) )
+				if( !mysqli_select_db( $GLOBALS['LP_'.$db_key] , $db_name ) )
 				{
 					echo 'can\'t select database ' . $db_name ;
 					return false;
@@ -36,7 +36,7 @@ function db( $host = null , $port = null , $user = null , $password = null , $db
 			}
 		}
 		
-		mysql_query( "SET NAMES 'UTF8'" , $GLOBALS['LP_'.$db_key] );
+		mysqli_query( $GLOBALS['LP_'.$db_key] , "SET NAMES 'UTF8'");
 	}
 	
 	return $GLOBALS['LP_'.$db_key];
@@ -45,7 +45,7 @@ function db( $host = null , $port = null , $user = null , $password = null , $db
 function s( $str , $db = NULL )
 {
 	if( $db == NULL ) $db = db();
-	return   mysql_real_escape_string( $str , $db )  ;
+	return   mysqli_real_escape_string( $db , $str)  ;
 	
 }
 
@@ -84,20 +84,20 @@ function get_data( $sql , $db = NULL )
 	$GLOBALS['LP_LAST_SQL'] = $sql;
 	$data = Array();
 	$i = 0;
-	$result = mysql_query( $sql ,$db );
+	$result = mysqli_query( $db , $sql);
 	
-	if( mysql_errno() != 0 )
-		echo mysql_error() .' ' . $sql;
-	
-	while( $Array = mysql_fetch_array($result, MYSQL_ASSOC ) )
+	if( mysqli_errno($db) != 0 )
+		echo mysqli_error( $db ) .' ' . $sql;
+
+	while( $Array = mysqli_fetch_array($result, MYSQLI_ASSOC ) )
 	{
 		$data[$i++] = $Array;
 	}
 	
-	if( mysql_errno() != 0 )
-		echo mysql_error() .' ' . $sql;
+	if( mysqli_errno($db) != 0 )
+		echo mysqli_error( $db ) .' ' . $sql;
 	
-	mysql_free_result($result); 
+	mysqli_free_result($result); 
 
 	if( count( $data ) > 0 )
 		return $data;
@@ -127,20 +127,20 @@ function run_sql( $sql , $db = NULL )
 {
 	if( $db == NULL ) $db = db();
 	$GLOBALS['LP_LAST_SQL'] = $sql;
-	return mysql_query( $sql , $db );
+	return mysqli_query( $db , $sql );
 }
 
 function db_errno( $db = NULL )
 {
 	if( $db == NULL ) $db = db();
-	return mysql_errno( $db );
+	return mysqli_errno( $db );
 }
 
 
 function db_error( $db = NULL )
 {
 	if( $db == NULL ) $db = db();
-	return mysql_error( $db );
+	return mysqli_error( $db );
 }
 
 function last_error()
@@ -155,5 +155,5 @@ function close_db( $db = NULL )
 		$db = $GLOBALS['LP_DB'];
 		
 	unset( $GLOBALS['LP_DB'] );
-	mysql_close( $db );
+	mysqli_close( $db );
 }

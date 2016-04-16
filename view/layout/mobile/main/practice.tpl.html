@@ -1,0 +1,76 @@
+<?php 
+$tfile = 'view' . DS . 'layout' . DS  . g('layout') . DS . header2 . '.tpl.html' ;
+if( file_exists( AROOT . $tfile ) ) include( AROOT . $tfile );
+else @include( CROOT . $tfile );
+?>
+<section>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12" style="padding:0px;">
+				<div class="carousel slide" id="carousel" data-pause="true" data-interval="false" data-wrap="false">
+					<div class="carousel-inner" style="height:100%;width:100%;">
+						<?php 
+							if( isset( $completion ) && is_array( $completion ) && count( $completion ) > 0){
+								$i = 0;
+								while ( $i < count( $completion ) ) {
+									# code...
+										$tfile = 'view' . DS . 'layout' . DS  . g('layout') . DS . carousel_completion . '.tpl.html' ;
+										if( file_exists( AROOT . $tfile ) ) include( AROOT . $tfile );
+										else @include( CROOT . $tfile );
+										$i++;
+									}
+							}
+							if( isset( $options ) && is_array( $options ) && count( $options ) > 0){
+								
+								$i = 0;
+								while ( $i < count( $options ) ) {
+									# code...
+										$tfile = 'view' . DS . 'layout' . DS  . g('layout') . DS . carousel_option . '.tpl.html' ;
+										if( file_exists( AROOT . $tfile ) ) include( AROOT . $tfile );
+										else @include( CROOT . $tfile );
+										$i++;
+									}
+							}
+						?>
+					</div> 
+					<div>
+						<a class="left carousel-control" data-slide="prev" href="#carousel">上一题</a> 
+						<a class="right carousel-control" data-slide="next" href="#carousel">下一题</a>
+					</div>
+				</div>
+			</div>	
+		</div>
+	</div>
+</section>
+<script type="text/javascript">
+	$("#carousel").find(".item").eq(0).addClass("active");
+	$(document).ready(function (argument) {
+		// body...
+		// $("#carousel").find(".item").eq(0).addClass("active");
+		var last = $("#carousel").find(".item").last().find(".carousel-caption");
+		last.append("<a style='margin-top:10px;' class='btn btn-block btn-lg btn-success' data-toggle='button' id='done'>练习完成</a>");
+		
+		$("#done").click(function(){
+			var url = window.location.href;
+		    url = url.slice(0,url.indexOf("?"));
+		    var course_id = getUrlParam("course_id");
+		    var chapter_id = getUrlParam("chapter_id");
+		    var student_id = $.cookie("UserName");
+		    $.ajax({
+		    	type:"POST",
+		    	url:url+"?c=main&a=record",
+		    	data:"type=practice&course_id="+course_id+"&chapter_id="+chapter_id+"&student_id="+student_id,
+		    	success:function(data){
+		    		if(data == "1"){
+		    			window.location.href = url + "?c=main&a=test&course_id="+course_id+"&chapter_id="+chapter_id;
+		    		}else{
+		    			dialog("数据库错误");
+		    		}
+		    	},
+		    	error: function (request) {	
+                	 dialog("Connection error");
+           		}
+		    });
+		});
+	});
+</script>

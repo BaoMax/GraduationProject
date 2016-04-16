@@ -1,0 +1,13 @@
+<div class="panel panel-default" style="margin-top:0px;border-radius:0px;">
+    <div class="panel-heading" style="padding:0px;">
+      <i class="-open fa fa-angle-right fa-fw fa-lg"></i><a data-toggle="collapse" data-parent="#catalog" 
+        href="#<?=$i?>" class="title collapsed" style="font-size=20px;display:inline-block;width:70%;line-height:350%"><?=$chapter[$i]['chapter_name']?></a>
+    </div>
+    <div id="<?=$i?>" class="panel-collapse collapse">
+      <div class="panel-body">
+          <h4 style="margin:0px;"><a class="catalog_preview" data-course="<?=$chapter[$i]['course_id']?>" data-chapter="<?=$chapter[$i]['chapter_index']?>" style="display:inline-block;width:100%;line-height:200%"><i class="fa fa-fw fa-book"></i>课前预习</a></h4>
+          <h4 style="margin:0px;"><a class="catalog_practice" data-course="<?=$chapter[$i]['course_id']?>" data-chapter="<?=$chapter[$i]['chapter_index']?>" style="display:inline-block;width:100%;line-height:200%"><i class="fa fa-fw fa-edit"></i>课堂练习</a></h4>
+          <h4 style="margin:0px;"><a class="catalog_test" data-course="<?=$chapter[$i]['course_id']?>" data-chapter="<?=$chapter[$i]['chapter_index']?>" style="display:inline-block;width:100%;line-height:200%"><i class="fa fa-fw fa-clipboard"></i>课后测试</a></h4>
+      </div>
+    </div>
+</div>

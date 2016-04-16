@@ -1,0 +1,49 @@
+<?php 
+$tfile = 'view' . DS . 'layout' . DS  . g('layout') . DS . header2 . '.tpl.html' ;
+if( file_exists( AROOT . $tfile ) ) include( AROOT . $tfile );
+else @include( CROOT . $tfile );
+?>
+<div class="section">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="well">
+					<h3><?=$chapter_title?></h3>
+					<p><?=$chapter_content?></p>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<a class="btn btn-block btn-lg btn-success" data-toggle="button" id="done">阅读完成</a>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	$(document).ready(function  () {
+		// body...
+		$("#done").click(function(){
+			var url = window.location.href;
+		    url = url.slice(0,url.indexOf("?"));
+		    var course_id = getUrlParam("course_id");
+		    var chapter_id = getUrlParam("chapter_id");
+		    var student_id = $.cookie("UserName");
+		    $.ajax({
+		    	type:"POST",
+		    	url:url+"?c=main&a=record",
+		    	data:"type=preview&course_id="+course_id+"&chapter_id="+chapter_id+"&student_id="+student_id,
+		    	success:function(data){
+		    		if(data == "1"){
+		    			window.location.href = url + "?c=main&a=practice&course_id="+course_id+"&chapter_id="+chapter_id;
+		    		}else{
+		    			dialog("数据库错误");
+		    		}
+		    	},
+		    	error: function (request) {	
+                	 dialog("Connection error");
+           		}
+		    });
+		});
+	});
+</script>

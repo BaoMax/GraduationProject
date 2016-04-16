@@ -1,5 +1,4 @@
 <?php
-
 if( !defined('AROOT') ) die('NO AROOT!');
 if( !defined('DS') ) define( 'DS' , DIRECTORY_SEPARATOR );
 
@@ -8,6 +7,7 @@ define( 'IN' , true );
 
 define( 'ROOT' , dirname( __FILE__ ) . DS );
 define( 'CROOT' , ROOT . 'core' . DS  );
+
 
 // define 
 error_reporting(E_ALL^E_NOTICE);
@@ -26,6 +26,7 @@ $a = $GLOBALS['a'] = v('a') ? v('a') : c('default_action');
 
 $c = basename(strtolower( z($c) ));
 $a =  basename(strtolower( z($a) ));
+
 
 $post_fix = '.class.php';
 
@@ -48,5 +49,6 @@ if( !method_exists( $o , $a ) ) die('Can\'t find method - '   . $a . ' ');
 
 if(strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') !== FALSE && @ini_get("zlib.output_compression")) ob_start("ob_gzhandler");
 call_user_func( array( $o , $a ) );
+
 
 

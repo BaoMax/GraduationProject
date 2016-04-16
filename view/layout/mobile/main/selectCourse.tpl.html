@@ -1,0 +1,42 @@
+<?php 
+$tfile = 'view' . DS . 'layout' . DS  . g('layout') . DS . header . '.tpl.html' ;
+if( file_exists( AROOT . $tfile ) ) include( AROOT . $tfile );
+else @include( CROOT . $tfile );
+?>
+<div class="container">
+	<div class="row">
+		<div class="col-md-12">
+			<h3 class="text-center">请选择学习的科目</h3>
+		</div>
+	</div>
+</div>
+<section>
+	<div class="container">
+<?php if( isset($course) && is_array( $course ) ){
+	foreach( $course as $coursename ){
+		?>
+		<div class="row">
+			<div class="col-md-6">
+				<a class="a_link" data-name="<?=$coursename['course_name']?>" data-id="<?=$coursename['course_id']?>" data-chapter="<?=$coursename['chapter_max']?>">
+					<i class="fa fa-4x fa-check-circle pull-left"></i>
+					<h4 class="text-left courseName" style="line-height:300%;"><?=$coursename['course_name']?></h4>
+				</a>
+			</div>
+		</div>
+		<?php
+	}
+}?>
+	</div>
+</section>
+<script type="text/javascript">
+	$(document).ready(function(){
+		var url_link = window.location.href.slice(0,window.location.href.indexOf("?"));
+		$(".a_link").each(function(){
+			$(this).click(function(){	
+				var url = window.location.href;
+		        url = url.slice(0,url.indexOf("?"));
+		        window.location.href = url + "?c=main&a=catalog&course_id="+$(this).attr("data-id")+"&course_name="+$(this).attr("data-name")+"&chapter_max="+$(this).attr("data-chapter");
+			});
+		});
+	});
+</script>

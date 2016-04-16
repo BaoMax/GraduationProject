@@ -1,0 +1,129 @@
+<section>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<h2 style="text-align:center;">期末考试</h2>
+				<div class="jumbotron">
+					<p style="font-size:16px;">科目：<b><?=$course?></b></p>
+					<p style="font-size:16px;">学号：<b><?=$user?></b></p>
+				</div>
+				<h3>一.填空题</h3>
+				<?php
+					if( isset( $completion ) && is_array( $completion ) && count( $completion ) > 0){
+						$i = 0;
+						while ( $i < count( $completion ) ) {
+							$tfile = 'view' . DS . 'layout' . DS  . g('layout') . DS . completion . '.tpl.html' ;
+							if( file_exists( AROOT . $tfile ) ) include( AROOT . $tfile );
+							else @include( CROOT . $tfile );
+							$i++;
+						}
+					}
+				?>
+				<h3>二.选择题</h3>
+				<?php
+					if( isset( $options ) && is_array( $options ) && count( $options ) > 0){
+						$i = 0;
+						while ( $i < count( $options ) ) {
+							$tfile = 'view' . DS . 'layout' . DS  . g('layout') . DS . options . '.tpl.html' ;
+							if( file_exists( AROOT . $tfile ) ) include( AROOT . $tfile );
+							else @include( CROOT . $tfile );
+							$i++;
+						}
+					}
+				?>
+				<a class="btn btn-block btn-lg btn-success" id="done">提交</a>
+			</div>
+		</div>
+	</div>
+</section>
+<script type="text/javascript">
+	$(document).ready(function  (argument) {
+		var answer = [];
+		<?php
+		if( isset( $completion ) && is_array( $completion )){
+			foreach ($completion as $value) {
+				# code...
+			?>
+				var temp = {};
+				temp["answer"] = "<?=$value['answer']?>";
+				temp["explain"] = "<?=$value['explain']?>";
+				answer.push(temp);
+			<?php
+			}
+			
+		}
+		if( isset( $options ) && is_array( $options )){
+			foreach ($options as $value) {
+				# code...
+			?>
+				var temp = {};
+				temp["answer"] = "<?=$value['answer']?>";
+				temp["explain"] = "<?=$value['explain']?>";
+				answer.push(temp);
+			<?php
+			}
+			
+		}
+		?>
+		$(".well").delegate("input[type='radio']","click",function(){
+			var name = $(this).attr("name");
+			if($(this).is(':checked')){
+				console.log("aaa");
+				$("input[name="+name+"]").each(function(){
+					$(this).next().css("color","black");
+				});
+				$(this).next().css("color","red");
+			}
+		});
+
+
+		$("#done").click(function(){
+			var myanswer = [];
+			var options = $("input[type='radio']:checked") || [];
+			var completion = $("input[type='text']") || [];
+			completion.each(function(){
+				myanswer.push($.trim($(this).val()));
+			});
+			options.each(function(){
+				myanswer.push($.trim($(this).val()));
+			});
+			var score = Number(0);
+			var step = Number(100/answer.length).toFixed(2);
+			for(var i = 0;i<myanswer.length;i++){
+				if (myanswer[i] == answer[i]["answer"]) {
+					score += step;
+				};
+			}
+
+			var url_link = window.location.href.slice(0,window.location.href.indexOf("?"));
+			var course_id = getUrlParam("course_id");
+		    var student_id = getUrlParam("student_id");
+		    // window.location.href = url_link+"?c=main&a=score&course_id="+course_id+"&student_id="+student_id+"&score="+score;
+			$.ajax({
+				type:"POST",
+				url:url_link + "?c=main&a=score",
+				data:"course_id="+course_id+"&student_id="+student_id+"&score="+score,
+				dataType:"json",
+		    	success:function(data){
+		    		console.log(data);
+		    		if(!data == "0"){
+		    			var height = $('html').height();
+    					var str = "<div id='shade'></div>";
+					    $("body").append(str);
+					    $("#shade").height(height);
+					    $("#shade").append("<section style='width:90%;margin:auto;'><div class='container'></div><div class='row'><div class='col-md-12'><h2 style='text-align:center;'>成绩单</h2><div class='jumbotron'><p style='font-size:16px;'>科目：<b><?=$course?></b></p><p style='font-size:16px;'>学号：<b><?=$user?></b></p>"
+					        +"<p style='font-size:16px;'>平时成绩：<b>"+data.common_score+"</b></p>"
+					        +"<p style='font-size:16px;'>期末成绩：<b>"+data.fail_score+"</b></p>"
+					        +"<p style='font-size:16px;'>总成绩：<b>"+data.score+"</b></p>"
+					        +"<a href='javascript:userCenter()' class='btn btn-block btn-lg btn-success' id='sure'>确认</a></div></div></div></section>");
+		    		}else{
+		    			dialog("数据库错误");
+		    		}
+		    	},
+		    	error: function (request) {	
+                	 dialog("Connection error");
+           		}
+			});
+		});
+	});
+</script>

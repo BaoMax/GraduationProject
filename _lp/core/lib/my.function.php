@@ -1,4 +1,12 @@
 <?php
+function hasCollectionProblem($student_id,$problem_id,$problem_type,$type){
+	$sql = "select * from userproblems where student_id = '".$student_id."' and problem_id = '".$problem_id."' and problem_type = '".$problem_type."' and type = '".$type."'";
+	$result = get_data($sql);
+	if(isset($result) && is_array($result)){
+		return true;
+	}
+	return false;
+}
 function getCompletion($num,$course,$chapter = null){
 
 	if($chapter != null){
@@ -10,11 +18,22 @@ function getCompletion($num,$course,$chapter = null){
 		
 	if( isset( $result ) && is_array( $result )){
 		$data = array();
-		$temp = array_rand($result,$num);
-		$i = 0;
-		foreach ( $temp as $key ) {
-				# code...
-			$data[$i++] = $result[$key];
+		if(count($result) < $num){
+			$data = $result;
+		}else{
+			$temp = array_rand($result,$num);
+			$i = 0;
+			foreach ( $temp as $key ) {
+					# code...
+				$data[$i++] = $result[$key];
+			}
+		}
+		foreach ($data as $key => $value) {
+			# code...
+			if(hasCollectionProblem($_COOKIE['UserName'],$value['completion_id'],0,0))
+				$data[$key]["collection"] = "true";
+			else
+				$data[$key]["collection"] = "false";
 		}
 		return $data;
 	}else{
@@ -32,11 +51,22 @@ function getOption($num,$course,$chapter = null){
 		
 	if( isset( $result ) && is_array( $result )){
 		$data = array();
-		$temp = array_rand($result,$num);
-		$i = 0;
-		foreach ( $temp as $key ) {
+		if(count($result) < $num){
+			$data = $result;
+		}else{
+			$temp = array_rand($result,$num);
+			$i = 0;
+			foreach ( $temp as $key ) {
+				# code...
+				$data[$i++] = $result[$key];
+			}
+		}
+		foreach ($data as $key => $value) {
 			# code...
-			$data[$i++] = $result[$key];
+			if(hasCollectionProblem($_COOKIE['UserName'],$value['completion_id'],1,0))
+				$data[$key]["collection"] = "true";
+			else
+				$data[$key]["collection"] = "false";
 		}
 		return $data;
 	}else{
@@ -139,6 +169,16 @@ function getRandCourseByType($type,$num){
 		}
 	}
 	return $result;
+}
+function getChapterIndexByStudentId($course_id,$student_id){
+	$sql = "select * from record where course_id = '".$course_id."' and student_id = '".$student_id."'";
+	$result = get_data($sql);
+	if(isset($result) && is_array($result)){
+		$temp = array_column($result,"chapter_id");
+		arsort($temp,SORT_NUMERIC);
+		return $temp[0] + 1;
+	}
+	return 1;
 }
 function encrypt($key, $plain_text) {
     $plain_text = trim($plain_text);

@@ -9,7 +9,7 @@ else @include( CROOT . $tfile );
     	foreach ($recommend as $key) {
     		# code...
     		?>
-    		<li><img src="<?=$key['image_url']?>"></li>
+    		<li><img src="<?=$key['image_url']?>" onclick="course(<?=$key['course_id']?>)"></li>
     		<?php
     	}
     ?>

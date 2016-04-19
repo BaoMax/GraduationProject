@@ -4,7 +4,7 @@ if( file_exists( AROOT . $tfile ) ) include( AROOT . $tfile );
 else @include( CROOT . $tfile );
 ?>
 <h3 class="am-text-center"><?=$chapter['chapter_name']?></h3>
-<div id="player">
+<div id="player" style="height: 200px;width: 100%;">
 	<video id="vedio" src="<?=$preview['vedio_url']?>" width="100%" controls="controls">
 	Your browser does not support the video tag.
 	</video>
@@ -26,7 +26,28 @@ else @include( CROOT . $tfile );
 		<div>
 	</div> -->
 </div>
-<a></a>
+<div class="am-margin-vertical-xs am-margin-horizontal-xs">
+<?php
+	if($flag){
+	?>
+		<a class="am-btn am-btn-block am-btn-lg am-btn-success" href="javascript:practice(<?=$chapter['chapter_index']?>);">开始练习</a>
+	<?php
+	}else{
+		?>
+		<a class="am-btn am-btn-block am-btn-lg am-btn-success" href="javascript:add();">加入课程清单</a>
+		<?php
+	}
+?>
+<h2 class="my-header">内容介绍</h2>
+<article class="am-article">
+	<div class="am-article-hd">
+		<p class="am-article-title am-text-center"><?=$preview["title"]?></p>
+	</div>
+	<div class="am-article-bd">
+		<p><?=$preview["context"]?></p>
+	</div>
+</article>
+</div>
 <script type="text/javascript">
 	// $(document).ready(function (argument) {
 	// 	// body...
@@ -109,4 +130,32 @@ else @include( CROOT . $tfile );
 	// 		});
 	// 	});
 	// });
+function practice(chapter_index){
+	var pos = window.location.href.indexOf("?");
+	var url = window.location.href.slice(0,pos);
+	var course_id = getUrlParam("course_id");
+	window.location.href = url + "?c=main&a=practice&course_id="+course_id+"&chapter_index="+chapter_index;
+}
+function add(){
+	var pos = window.location.href.indexOf("?");
+	var url = window.location.href.slice(0,pos);
+	var course_id = getUrlParam("course_id");
+    $.ajax({
+       url:url + "?c=main&a=checkCourse",
+       data:"course_id="+course_id,
+       type:"POST",
+       success:function(data){
+        console.log(data);
+        if(data == "1"){
+          location.reload();
+        }else{
+          location.reload();
+          alert("课程已加入");
+        }
+       },
+       error:function(){
+          dialog("Connection error");
+       }
+    });
+}
 </script>

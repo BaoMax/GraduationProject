@@ -3,74 +3,133 @@ $tfile = 'view' . DS . 'layout' . DS  . g('layout') . DS . header2 . '.tpl.html'
 if( file_exists( AROOT . $tfile ) ) include( AROOT . $tfile );
 else @include( CROOT . $tfile );
 ?>
-<section>
-	<div class="container">
-		<div class="row">
-			<div class="col-md-12" style="padding:0px;">
-				<div class="carousel slide" id="carousel" data-pause="true" data-interval="false" data-wrap="false">
-					<div class="carousel-inner" style="height:100%;width:100%;">
-						<?php 
-							if( isset( $completion ) && is_array( $completion ) && count( $completion ) > 0){
-								$i = 0;
-								while ( $i < count( $completion ) ) {
-									# code...
-										$tfile = 'view' . DS . 'layout' . DS  . g('layout') . DS . carousel_completion . '.tpl.html' ;
-										if( file_exists( AROOT . $tfile ) ) include( AROOT . $tfile );
-										else @include( CROOT . $tfile );
-										$i++;
-									}
-							}
-							if( isset( $options ) && is_array( $options ) && count( $options ) > 0){
-								
-								$i = 0;
-								while ( $i < count( $options ) ) {
-									# code...
-										$tfile = 'view' . DS . 'layout' . DS  . g('layout') . DS . carousel_option . '.tpl.html' ;
-										if( file_exists( AROOT . $tfile ) ) include( AROOT . $tfile );
-										else @include( CROOT . $tfile );
-										$i++;
-									}
-							}
-						?>
-					</div> 
-					<div>
-						<a class="left carousel-control" data-slide="prev" href="#carousel">上一题</a> 
-						<a class="right carousel-control" data-slide="next" href="#carousel">下一题</a>
-					</div>
-				</div>
-			</div>	
-		</div>
-	</div>
-</section>
+<div class="am-slider am-slider-default"  id="slider">
+  <ul class="am-slides">
+    <?php
+    	$i=1;
+    	foreach ($completion as $value) {
+    		# code...
+    	?>
+    	<li data-collection="<?=$value['collection']?>" data-id="<?=$value['completion_id']?>" data-type="0">
+    		<div class="am-margin-lg">
+	    		<p class="am-text-break"><span style="display:inline;background-color:#fff;color:#3bb4f2;border:1px solid #3bb4f2;font-size:12px;">填空题</span><b><?=$i?>.</b><?=$value['title']?></p>
+	    		<h3 class="my-header">试题详解</h3>
+	    		<p class="am-text-break">答案：<?=$value['answer']?></p>
+	    		<p class="am-text-break">解释：<?=$value['explain']?></p>
+    		</div>
+    	</li>
+    	<?php	
+    		$i++;
+    	}
+    	foreach ($options as $value) {
+    		# code...
+    	?>
+		<li data-collection="<?=$value['collection']?>" data-id="<?=$value['option_id']?>" data-type="1">
+    		<div class="am-margin-lg">
+	    		<p class="am-text-break"><span style="display:inline;background-color:#fff;color:#3bb4f2;border:1px solid #3bb4f2;font-size:12px;">单选题</span><b><?=$i?>.</b><?=$value['title']?></p>
+	    		<p class="am-text-break">A.<?=$value['answerA']?></p>
+	    		<p class="am-text-break">B.<?=$value['answerB']?></p>
+	    		<p class="am-text-break">C.<?=$value['answerC']?></p>
+	    		<p class="am-text-break">D.<?=$value['answerD']?></p>
+	    		<h3 class="my-header">试题详解</h3>
+	    		<p class="am-text-break">答案：<?=$value['answer']?></p>
+	    		<p class="am-text-break">解释：<?=$value['explain']?></p>
+    		</div>
+    	</li>
+    	<?php	
+    	   $i++;
+    	}
+    ?>
+     <li>
+     	<div class="am-margin-lg">
+     		<h3 class="my-header">答题卡</h3>
+     	<?php
+     		for($i = 1;$i<=count($completion)+count($options);$i++){
+     		?>
+			<span style="display:inline-block;background-color:#fff;color:#000;border:1px solid #000;font-size:18px;width:40px;height:40px;line-height:40px;text-align:center;margin:5px;" onclick="select();"><?=$i?></span>
+     		<?php
+     		}
+     	?>
+        </div>
+    </li>
+  </ul>
+  <div data-am-widget="navbar" class="am-navbar am-cf am-navbar-default"id="controller">
+    <ul class="am-navbar-nav am-cf am-avg-sm-4">
+          <li id="collection">
+            <a class="am-icon-sm am-icon-star-o" href="javascript:collection();"> 收藏</a>
+          </li>
+          <li id="number">
+          	<a>1/<?=$i?></a>
+          </li>
+          <li id="cardPage">
+            <a class="am-icon-sm am-icon-file-text-o" href="javascript:cardPage();"> 答题卡</a>
+          </li>
+          <li id="done" style="display:none;">
+          	<a class="am-icon-sm am-icon-star-o" href="javascript:done();">提交并查看答案</a>
+          </li>
+    </ul>
+  </div>
+</div>
+
 <script type="text/javascript">
-	$("#carousel").find(".item").eq(0).addClass("active");
-	$(document).ready(function (argument) {
-		// body...
-		// $("#carousel").find(".item").eq(0).addClass("active");
-		var last = $("#carousel").find(".item").last().find(".carousel-caption");
-		last.append("<a style='margin-top:10px;' class='btn btn-block btn-lg btn-success' data-toggle='button' id='done'>练习完成</a>");
-		
-		$("#done").click(function(){
-			var url = window.location.href;
-		    url = url.slice(0,url.indexOf("?"));
-		    var course_id = getUrlParam("course_id");
-		    var chapter_id = getUrlParam("chapter_id");
-		    var student_id = $.cookie("UserName");
-		    $.ajax({
-		    	type:"POST",
-		    	url:url+"?c=main&a=record",
-		    	data:"type=practice&course_id="+course_id+"&chapter_id="+chapter_id+"&student_id="+student_id,
-		    	success:function(data){
-		    		if(data == "1"){
-		    			window.location.href = url + "?c=main&a=test&course_id="+course_id+"&chapter_id="+chapter_id;
-		    		}else{
-		    			dialog("数据库错误");
-		    		}
-		    	},
-		    	error: function (request) {	
-                	 dialog("Connection error");
-           		}
-		    });
-		});
-	});
+  var count = "<?php echo count($completion)+count($options);?>";
+  $(document).ready(function  (argument) {
+  	// body...
+  	$('#slider').flexslider({
+    // options
+	  animationLoop: false,            // Boolean: 是否循环播放
+	  slideshow: false,                // Boolean: 是否自动播放
+	  controlNav: false,               // Boolean: 是否创建控制点
+  	  directionNav: false,             // Boolean: 是否创建上/下一个按钮（previous/next）
+  	  after: function(slider){
+  	  	var collection = $("#slider .am-active-slide").attr("data-collection");
+  	  	var now = slider.currentSlide + 1;
+  	  	$("#number a").text(now+"/"+slider.count);
+  	  	if(now == slider.count){
+  	  		$("#cardPage").css("display","none");
+	  	  	$("#collection").css("display","none");
+	  	  	$("#number").css("display","none");
+	  	  	$("#done").css("display","table-cell");
+	  	  }else{
+	  	  	$("#cardPage").css("display","table-cell");
+	  	  	$("#collection").css("display","table-cell");
+	  	  	$("#number").css("display","table-cell");
+	  	  	$("#done").css("display","none");
+	  	  	if(collection == "true"){
+	  	  		$("#collection a").removeClass("am-icon-star-o").addClass("am-icon-star");
+	  	  		$("#collection a").text("已收藏");
+	  	  	}else{
+	  	  		$("#collection a").removeClass("am-icon-star").addClass("am-icon-star-o");
+	  	  		$("#collection a").text("收藏");
+	  	  	}
+	  	  }
+  	  }
+  	});
+	var collection = $("#slider .am-active-slide").attr("data-collection");
+	if(collection == "true"){
+		$("#collection a").removeClass("am-icon-star-o").addClass("am-icon-star");
+	  	$("#collection a").text("已收藏");
+	}
+  });
+  function cardPage(){
+  	$("#slider").flexslider(Number(count));
+  };
+  function collection(){
+  	var pos = window.location.href.indexOf("?");
+  	var url = window.location.href.slice(0,pos);
+  	var type = $("#slider .am-active-slide").attr("data-type");
+  	var problem_id = $("#slider .am-active-slide").attr("data-id");
+  	var flag = $("#slider .am-active-slide").attr("data-collection");
+  	$.ajax({
+  		url:url+"?c=main&a=collection",
+  		type:"POST",
+  		data:"problem_id="+problem_id+"&problem_type="+type+"&flag="+flag,
+  		success:function(data){
+
+  		},
+  		error:function(){
+  			dialog("Connection error");
+  		}
+  	});
+  }
 </script>

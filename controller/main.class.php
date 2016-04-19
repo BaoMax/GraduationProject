@@ -42,34 +42,33 @@ class mainController extends appController{
 		render( $data );
 	}
 
+	function checkCourse(){
+		$course = $_POST["course_id"];
+		$student = $_COOKIE['UserName'];
+		echo insertStudentCourse($student,$course);
+	}
+	function cont(){
+		$course_id = $_POST["course_id"];
+		$student_id = $_COOKIE["UserName"];
+		$data = array();
+		$data["chapter_index"] = getChapterIndexByStudentId($course_id,$student_id);
+		echo json_encode($data);
+	}
 	function preview(){
 		$data["title"] = $data["top_title"] = "课前预习";
 		$course = $_GET["course_id"];
 		$chapter = $_GET["chapter_index"];
 		$student = $_COOKIE['UserName'];
-		$flag = $_GET['flag'];
 		$data['chapter'] = getChapterByChapterIndex($course,$chapter);
 		$data['preview'] = getPreview($course,$chapter);
-		$data['css'] = array('play.css');
-		if ($flag == "true") {
-			# code...
-			if(!insertStudentCourse($student,$course)){
-				$url = $_SERVER['HTTP_REFERER'];
-				echo "<script type='text/javascript'>";  
-				echo "dialog('课程已加入！');";
-				echo "window.location.href='$url';";  
-				echo "</script>";   
-				return false;
-			}
-		}
+		$data['flag'] = hasCourseByStudentId($student,$course);
 		render( $data );
 	}
 
 	function practice(){
 		$data["title"] = $data["top_title"] = "课堂练习";
 		$course = $_GET["course_id"];
-		$chapter = $_GET["chapter_id"];
-
+		$chapter = $_GET["chapter_index"];
 		$temp = getCompletion(5,$course,$chapter);
 		if( isset( $temp ) && is_array( $temp )){
 			$data["completion"] = array();

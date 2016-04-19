@@ -16,16 +16,11 @@ else @include( CROOT . $tfile );
           <div data-tab-panel-0 class="am-tab-panel am-active">
           	<ul class="am-list">
             <?php
-              if($flag){
-                $f = 'false';
-              }else{
-                $f = 'true';
-              }
             	foreach ($chapter as $value) {
             		# code...
             	?>
             	<li class="am-g">
-          			<a href="javascript:preview(<?=$value['chapter_index']?>,<?=$f?>);" class="am-list-item-hd "><?=$value['chapter_name']?></a>
+          			<a href="javascript:pre(<?=$value['chapter_index']?>);" class="am-list-item-hd "><?=$value['chapter_name']?></a>
           		</li>	
             	<?php
             	}
@@ -44,25 +39,64 @@ else @include( CROOT . $tfile );
   <?php
     if($flag){
       ?>
-      <a class="am-btn am-btn-block am-btn-lg am-btn-success" href="javascript:preview(1,false);">继续学习</a>
+      <a class="am-btn am-btn-block am-btn-lg am-btn-success" href="javascript:cont();">继续学习</a>
       <?php
     }else{
       ?>
-      <a class="am-btn am-btn-block am-btn-lg am-btn-success" href="javascript:preview(1,true);">加入课程清单</a>
+      <a class="am-btn am-btn-block am-btn-lg am-btn-success" href="javascript:add(1);">加入课程清单</a>
       <?php
     }
   ?>
 </div>	
 <script type="text/javascript">
-	function  preview(chapter_index,flag) {
+	function  add(chapter_index) {
 		// body...
 		var pos = window.location.href.indexOf("?");
 		var url = window.location.href.slice(0,pos);
 		var course_id = getUrlParam("course_id");
-    if(flag){
-      window.location.href = url + "?c=main&a=preview&course_id="+course_id+"&chapter_index="+chapter_index+"&flag="+flag;
-    }else{
-      window.location.href = url + "?c=main&a=preview&course_id="+course_id+"&chapter_index="+chapter_index;
-    }
+      $.ajax({
+        url:url + "?c=main&a=checkCourse",
+        data:"course_id="+course_id,
+        type:"POST",
+        success:function(data){
+          console.log(data);
+          if(data == "1"){
+            window.location.href = url + "?c=main&a=preview&course_id="+course_id+"&chapter_index="+chapter_index;
+          }else{
+            location.reload();
+            alert("课程已加入");
+          }
+        },
+        error:function(){
+           dialog("Connection error");
+        }
+      });
 	};
+  function pre(chapter_index){
+    var pos = window.location.href.indexOf("?");
+    var url = window.location.href.slice(0,pos);
+    var course_id = getUrlParam("course_id");
+    window.location.href = url + "?c=main&a=preview&course_id="+course_id+"&chapter_index="+chapter_index;
+  }
+  function cont(){
+    var pos = window.location.href.indexOf("?");
+    var url = window.location.href.slice(0,pos);
+    var course_id = getUrlParam("course_id");
+    $.ajax({
+        url:url + "?c=main&a=cont",
+        data:"course_id="+course_id,
+        type:"POST",
+        dataType:"json",
+        success:function(data){
+          if(data){
+            window.location.href = url + "?c=main&a=preview&course_id="+course_id+"&chapter_index="+data.chapter_index;
+          }else{
+            dialog("数据库错误");
+          }
+        },
+        error:function(){
+           dialog("Connection error");
+        }
+      });
+  }
 </script>	

@@ -1,0 +1,32 @@
+<?php 
+$tfile = 'view' . DS . 'layout' . DS  . g('layout') . DS . header . '.tpl.html' ;
+if( file_exists( AROOT . $tfile ) ) include( AROOT . $tfile );
+else @include( CROOT . $tfile );
+?>
+<div data-am-widget="list_news" class="am-list-news am-list-news-default" >
+    <div class="am-list-news-bd">
+        <ul class="am-list">
+                <!--缩略图在标题左边-->
+            <?php
+  				for ($i=0; $i < count($course) ; $i++) { 
+				    $temp = $course[$i];
+				    $image_url = $temp['image_url'];
+				    $course_id = $temp['course_id'];
+				    $course_name = $temp['course_name'];
+    		?>
+            <li class="am-g am-list-item-desced am-list-item-thumbed am-list-item-thumb-left">
+	            <div class="am-u-sm-4 am-list-thumb">
+	                <a href="javascrip:course('<?=$course_id?>');" class="" data-course-id="<?=$course_id?>">
+	                    <img src="<?=$image_url?>" alt="<?=$course_name?>"/>
+	                </a>
+	            </div>
+	            <div class=" am-u-sm-8 am-list-main">
+	                <h3 class="am-list-item-hd"><a href="javascript:course('<?=$course_id?>');" class="" data-course-id="<?=$course_id?>"><?=$course_name?></a></h3>
+	            </div>
+            </li>
+            <?php
+            }	
+            ?>
+        </ul>
+    </div>  
+</div> 

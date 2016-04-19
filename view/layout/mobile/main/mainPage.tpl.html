@@ -1,0 +1,98 @@
+<?php 
+$tfile = 'view' . DS . 'layout' . DS  . g('layout') . DS . header . '.tpl.html' ;
+if( file_exists( AROOT . $tfile ) ) include( AROOT . $tfile );
+else @include( CROOT . $tfile );
+?>
+<div class="am-slider am-slider-default" data-am-flexslider id="slider">
+  <ul class="am-slides">
+    <?php
+    	foreach ($recommend as $key) {
+    		# code...
+    		?>
+    		<li><img src="<?=$key['image_url']?>"></li>
+    		<?php
+    	}
+    ?>
+  </ul>
+</div>
+<ul class="am-nav am-nav-pills" data-am-sticky id="nav">
+  <li class="am-active"><a href="#type_0"><?=$type[0]?></a></li>
+  <?php
+    for ($i=1; $i < count($type) ; $i++) { 
+      # code...
+      ?>
+      <li><a href="#type_<?=$i?>"><?=$type[$i]?></a></li>
+      <?php
+    }
+  ?>
+</ul>
+<?php
+  for ($i=0; $i < count($type) ; $i++) { 
+    # code...
+    ?>
+      <div id="type_<?=$i?>">
+        <div data-am-widget="list_news" class="am-list-news am-list-news-default" >
+              <!--列表标题-->
+          <div class="am-list-news-hd am-cf">
+              <!--带更多链接-->
+            <a href="javascript:more('<?=$type[$i]?>');" class="" data-type="<?=$type[$i]?>">
+            <h2 class="my-header"><?=$type[$i]?></h2>
+            <span class="am-list-news-more am-fr">更多 &raquo;</span>
+            </a>
+          </div>
+          <div class="am-list-news-bd">
+            <ul class="am-list">
+                <!--缩略图在标题左边-->
+                <?php
+                  for ($j=0; $j < count($options[$type[$i]]); $j++) { 
+                    # code...
+                    $temp = $options[$type[$i]];
+                    $image_url = $temp[$j]['image_url'];
+                    $course_id = $temp[$j]['course_id'];
+                    $course_name = $temp[$j]['course_name'];
+                    ?>
+                      <li class="am-g am-list-item-desced am-list-item-thumbed am-list-item-thumb-left">
+                        <div class="am-u-sm-4 am-list-thumb">
+                          <a href="javascrip:course('<?=$course_id?>');" class="" data-course-id="<?=$course_id?>">
+                          <img src="<?=$image_url?>" alt="<?=$course_name?>"/>
+                          </a>
+                          </div>
+                          <div class=" am-u-sm-8 am-list-main">
+                          <h3 class="am-list-item-hd"><a href="javascript:course('<?=$course_id?>');" class="" data-course-id="<?=$course_id?>"><?=$course_name?></a></h3>
+                        </div>
+                      </li>
+                    <?php
+                  }
+                ?>
+            </ul>
+          </div>  
+        </div> 
+      </div>
+    <?php
+  }
+?>
+<script type="text/javascript">
+	$(document).ready(function(){
+		$('#slider').flexslider({
+   			animation: "slide",             // String: ["fade"|"slide"]，动画效果
+  			easing: "swing",                // String: 滚动动画计时函数
+  			direction: "horizontal",        // String: 滚动方向 ["horizontal"|"vertical"]
+  			reverse: false,                 // Boolean: 翻转 slide 运动方向
+  			animationLoop: true,            // Boolean: 是否循环播放
+  			smoothHeight: false,             // Boolean: 当 slide 图片比例不一样时
+                                  		    // "true": 父类自动适应图片高度
+                                            // "false": 不自动适应，父类高度为图片的最高高度，默认为false
+  			useCSS: true,                   // Boolean: 是否使用 css3 transition
+  			touch: true,                    // Boolean: 允许触摸屏触摸滑动滑块
+  			video: false,                   // Boolean: 使用视频的 slider，防止 CSS3 3D 变换毛刺
+  			controlNav: true,               // Boolean: 是否创建控制点
+  			directionNav: false,             // Boolean: 是否创建上/下一个按钮（previous/next）
+  		});
+    $('#nav').find('a').click(function(){
+      $('#nav').find('li').each(function(){
+        $(this).removeClass('am-active');
+      });
+      $(this).parent().addClass('am-active');
+    });
+	});
+</script>

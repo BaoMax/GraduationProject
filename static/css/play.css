@@ -1,0 +1,62 @@
+#player{
+	height: 250px;
+	width: 100%;
+}
+#controller{
+	height: 40px;	
+	width: 100%;
+	background-color: #000;
+	position: relative;
+}
+#vedio-btn{
+	padding-top: 10px;
+}
+#play{
+	margin:0 5px;
+}
+.icon{
+	color: #999;
+	font-size: 16px;
+	line-height: 30px;
+	margin: 0 3px;
+	width: 5%;
+}
+#progress{
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	display: inline-block;
+	width: 100%;
+	height: 10px;
+	background-color: #ddd;
+}
+.inner{
+	display: inline-block;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	background-color: #2187e7;
+	height: 10px;
+}
+.time{
+	color: #999;
+	font-weight: bold;
+	font-size: 13px;
+}
+#volume{
+	display: inline-block;
+	width: 28%;
+	height: 10px;
+	margin: 0 3px;
+	background-color: #999;
+	border-radius: 5px;
+	position: relative;
+	border-radius: 5px;
+}
+#volume .inner{
+	width: 100%;
+	border-radius: 5px;
+}
+#full-screen{
+	
+}

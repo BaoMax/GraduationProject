@@ -8,67 +8,60 @@ class mainController extends appController{
 	function __construct(){
 		parent::__construct();
 	}
-
+	function mainPage(){
+		$data["title"] = $data["top_title"] = "首页";
+		$data["recommend"] = getRecommend();
+		$data["type"] = getCourseType();
+		for($i = 0;$i<count($data["type"]);$i++){
+			$type = $data["type"][$i];
+			$data["options"][$type] = getRandCourseByType($type,3);
+		}
+		render( $data );
+	}
+	function course(){
+		$data["title"] = $data["top_title"] = "课程列表";
+		$type = $_GET["type"];
+		$data["course"] = getCourseByType($type);
+		render( $data );
+	}
 	function selectCourse(){
 		$data = array();
-		$data["title"] = $data["top-title"] = "选择课程";
-		$sql = "select * from course";
-		$result = get_data($sql);
+		$data["title"] = $data["top_title"] = "选择课程";
+		$result = getCourse();
 		$data["course"] = $result;
 		render( $data );
 	}
 
 	function catalog(){
 		$data = array();
-		$data["title"] = $data["top-title"] = "目录";
-
+		$data["title"] = $data["top_title"] = "课程介绍";
 		$courseId = $_GET["course_id"];
-		$courseName = $_GET["course_name"];
-		$chapter_max = $_GET["chapter_max"];
-
-		$sql = "insert into studentcourse values ('".$_COOKIE["UserName"]."','".$courseId."')";
-		run_sql($sql);
-
-		setcookie("key_".$_COOKIE["UserName"],$courseId);
-		setcookie("value_".$_COOKIE["UserName"],$courseName);
-		setcookie("max_".$_COOKIE["UserName"],$chapter_max);
-
-		$sql = "select * from chapters where course_id='".$courseId."'and course_name = '".$courseName."'";
-
-		$result = get_data($sql);
-		if(isset($result) && is_array( $result ))
-		{
-			// var_dump($result);
-			$data["chapter"] = array();
-			$i = 0;
-			foreach ($result as $chapter) {
-				$data["chapter"][$i++] = $chapter["chapter_index"];
-			}
-			array_multisort($data["chapter"], SORT_ASC,SORT_NUMERIC, $result);
-			$data["chapter"] = $result;
-		}
-		else{
-			echo false;
-		}
+		$data['course'] = getCourseById($courseId);
+		$data['chapter'] = getChapterByCourseId($courseId);
+		$data['flag'] = hasCourseByStudentId($_COOKIE['UserName'],$courseId);
 		render( $data );
 	}
 
 	function preview(){
-		$data["title"] = $data["top-title"] = "课前预习";
+		$data["title"] = $data["top_title"] = "课前预习";
 		$course = $_GET["course_id"];
-		$chapter = $_GET["chapter_id"];
-
-		$sql = "select * from article where course_id='".$course."'and chapter_id = '".$chapter."'";
-		$result = get_data($sql);
-		if( isset($result) && is_array($result) ){
-			$data["chapter_title"] = $result[0]["title"];
-			$data["chapter_content"] = $result[0]["context"];
+		$chapter = $_GET["chapter_index"];
+		$student = $_COOKIE['UserName'];
+		$flag = $_GET['flag'];
+		$data['chapter'] = getChapterByChapterIndex($course,$chapter);
+		$data['preview'] = getPreview($course,$chapter);
+		$data['css'] = array('play.css');
+		if ($flag == "true") {
+			# code...
+			if(!insertStudentCourse($student,$course)){
+				return false;
+			}
 		}
 		render( $data );
 	}
 
 	function practice(){
-		$data["title"] = $data["top-title"] = "课堂练习";
+		$data["title"] = $data["top_title"] = "课堂练习";
 		$course = $_GET["course_id"];
 		$chapter = $_GET["chapter_id"];
 
@@ -88,7 +81,7 @@ class mainController extends appController{
 
 
 	function test(){
-		$data["title"] = $data["top-title"] = "课后测试";
+		$data["title"] = $data["top_title"] = "课后测试";
 		$course = $_GET["course_id"];
 		$chapter = $_GET["chapter_id"];
 
@@ -107,7 +100,7 @@ class mainController extends appController{
 	}
 
 	function exam(){
-		$data["title"] = $data["top-title"] = "期末考试";
+		$data["title"] = $data["top_title"] = "期末考试";
 		$course = $_GET["course_id"];
 		$data["user"] = $_GET["student_id"];
 		$data["course"] = $_GET["course_name"];
@@ -185,7 +178,7 @@ class mainController extends appController{
 	}
 
 	function userCenter(){
-		$data["title"] = $data["top-title"] = "个人中心";
+		$data["title"] = $data["top_title"] = "个人中心";
 		$data["user"] = $_GET["student_id"];
 		$data["course"] = $_GET["course_name"];
 		if($data["course"] == undefined){

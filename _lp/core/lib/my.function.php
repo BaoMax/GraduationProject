@@ -21,7 +21,7 @@ function getCompletion($num,$course,$chapter = null){
 		return false;
 	}
 }
-function getOption($num,$course,$chapter){
+function getOption($num,$course,$chapter = null){
 
 	if($chapter){
 		$sql = "select * from options where course_id='".$course."' and chapter_id = '".$chapter."'";
@@ -54,6 +54,86 @@ function getScore($course,$user,$type,$chapter){
 	}else{
 		return 100*count($result)*0.1/$chapter;
 	}
+}
+function getRecommend(){
+	$sql = "select * from course where recommend = '1'";
+	return get_data($sql);
+}
+function getCourseType(){
+	$sql = "select type from course group by type";
+	$result = get_data($sql);
+	$i = 0;
+	if(isset($result) && is_array($result)){
+		foreach ($result as $value) {
+			# code...
+			$result[$i++] = $value['type'];
+		}
+	}
+	return $result;
+}
+function getCourseById($course_id){
+	$sql = "select * from course where course_id = '".$course_id."'";
+	$result = get_data($sql);
+	if(isset($result) && is_array($result)){
+		return $result[0];
+	}
+	return $result;
+}
+function getPreview($course_id,$chapter_index){
+	$sql = "select * from article where course_id='".$course_id."'and chapter_index = '".$chapter_index."'";
+	$result = get_data($sql);	
+	if(isset($result) && is_array($result)){
+		return $result[0];
+	}
+	return $result;
+}
+function insertStudentCourse($student_id,$course_id){
+	$sql = "insert into studentcourse (course_id,student_id) values('".$course_id."','".$student_id."')";
+	return run_sql($sql);
+}
+function hasCourseByStudentId($student_id,$course_id){
+	$sql = "select * from studentcourse where student_id = '".$student_id."' and course_id = '".$course_id."'";
+	$result = get_data($sql);
+	if(isset($result) && is_array($result)){
+		return true;
+	}
+	return false;	
+}
+function getChapterByCourseId($course_id){
+	$sql = "select * from chapters where course_id = '".$course_id."'";
+	return get_data($sql);
+}
+function getCourse(){
+	$sql = "select * from course";
+	return get_data($sql);
+}
+function getCourseByType($type){
+	$sql = "select * from course where type='".$type."'";
+	return get_data($sql);
+}
+function getChapterByChapterIndex($course_id,$chapter_index){
+	$sql = "select * from chapters where course_id = '".$course_id."' and chapter_index = '".$chapter_index."'";
+	$result = get_data($sql);
+	if(isset($result) && is_array($result)){
+		return $result[0];
+	}
+	return $result;
+}
+function getRandCourseByType($type,$num){
+	$result = getCourseByType($type);
+	if(isset($result) && is_array($result)){
+		if(count($result) > $num){
+			$temp = array_rand($result,$num);
+			$i = 0;
+			$data = array();
+			foreach ( $temp as $key ) {
+					# code...
+				$data[$i++] = $result[$key];
+			}
+			return $data;
+		}
+	}
+	return $result;
 }
 function encrypt($key, $plain_text) {
     $plain_text = trim($plain_text);

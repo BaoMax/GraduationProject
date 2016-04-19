@@ -8,104 +8,55 @@ body,html{
 	overflow: hidden;
 	overflow-y: scroll;
 }
-/*body{
-	overflow-x: hidden;
-}*/
-/*html{
-	overflow-x: hidden;
-}*/
 p,label{
 	font-size: 16px;
 }
-#shade{
-	background-color:rgba(0,0,0,0.8);
-	width:100%;
-	position:fixed;
-	left:0px;
-	bottom:0px;
+.header{
+	background-color: #0e90d2;
+	color: #fff;
+	z-index: 100;
+	position: relative;
+	box-shadow: 0 0 3px rgba(0,0,0,.15);
 }
-#dialogBox{
-	color:#000;
-	position:absolute;
-	top:0px;
-	left:0px;
-	right:0px;
-	bottom:0px;
-	min-width:70%;
-	max-width: 90%;
-	height:120px;
-	margin:auto;
-	background-color:#fff;
-	z-index: 1000;
-	border-radius: 5px;
-}
-#dialogBox p{
-	margin: 1rem;
-	text-align: center;
-}
-#dialogBox a{
-	display: block;
-	width: 100%;
-	text-align: center;
-	position: absolute;
-	bottom: 10px;
-}
-#dialogBox button{
-	background-color: red;
-	text-align: center;
-	border: 1px solid red;
-	color: #000;
-	width: 50%;
-	line-height: 200%;
-	border-radius: 6px;
-	margin: 0 auto;
-}
-.carousel-control{
-	position: absolute;
-    top: 60%;
-    width: 100px;
-    height: 50px;
-    margin-top: -20px;
-    font-size: 12px;
-    font-weight: 100;
-    line-height: 50px;
-    color: #ffffff;
+.header h1{
+	height: 49px;
+    line-height: 49px;
+    padding-left: 10px;
+    font-weight: 400;
     text-align: center;
-    background: #222222;
-    opacity: 0.5;
+    margin: 0;
+    font-size: 18px;
 }
-#carousel .item{
-	min-height: 500px;
-	height: 100%;
-	width: 100%;
-}
-#carousel .carousel-inner{
-	min-height: 500px;
-}
-#carousel .carousel-caption{
-	position: absolute;
-	display: block;
-	min-width: 60%;
-	padding: 0;
-	color: #000;
-	left: 50%;
-	top: 45%;
-	text-shadow: none;
-	text-align: left;
-	transform:translate(-50%,-50%);
-	-ms-transform:translate(-50%,-50%); /* IE 9 */
-	-moz-transform:translate(-50%,-50%); /* Firefox */
-	-webkit-transform:translate(-50%,-50%); /* Safari and Chrome */
-	-o-transform:translate(-50%,-50%); /* Opera */
-}
-input.completion_hr{
-	outline: none;
-	border: none;
-	background-color: transparent;
-	text-indent: 1rem;
-	border-bottom: 2px solid #000;
-}
-.option_select{
-	width: 90%;
+#btn-back,#btn-user,#btn-catalog{
 	display: inline-block;
+    width: 44px;
+    height: 43px;
+    position: absolute;
+    top: 50%;
+    margin-top: -21.5px;
+    text-align: center;
+    line-height: 43px;
+    cursor: pointer;
+}
+#btn-back{
+	left: 5px;
+}
+#btn-user,#btn-catalog{
+	right: 5px;
+}
+.my-header{
+	position: relative;
+    padding-left: 12px;
+    color: #0e90d2;
+    font-size: 1.8rem;
+    text-align: left;
+    font-weight: 700;
+}
+.my-header:before{
+	content: "";
+    position: absolute;
+    left: 2px;
+    top: 8px;
+    bottom: 8px;
+    border-left: 3px solid #0e90d2;
 }

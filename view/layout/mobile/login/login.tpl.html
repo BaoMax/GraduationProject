@@ -1,41 +1,24 @@
-<div class="section">
-	<div class="container">
-		<div class="row">
-			<div class="col-md-12">
-				<form class="form-horizontal" role="form" id="form">
-					<div class="form-group">
-						<div class="col-sm-2">
-							<label for="UserName" class="control-label">用户名</label>
-						</div>
-						<div class="col-sm-10">
-							<input type="text" class="form-control" id="UserName" placeholder="用户名" name="UserName">
-							<p class="tips">请输入9位数字学号</p>
-						</div>
+<div class="am-g">
+	<div class="am-u-sm-12 am-u-md-12">
+		<form class="am-form am-margin-vertical-sm" role="form" id="form">
+			<fieldset>
+				<legend class="am-text-center">登录</legend>
+				<div class="am-form-group">
+					<label for="UserName" class="">用户名</label>
+					<input type="text" class="" id="UserName" placeholder="用户名" name="UserName" required pattern="^\d{9}$" data-validation-message="请输入9位数字学号">
+				</div>
+				<div class="am-form-group">
+					<label for="Password" class="">密码</label>
+					<input type="password" class="" id="Password" placeholder="密码" name="Password" required pattern="^\w{6,12}$" data-validation-message="请输入6-12位密码，由数字和字母组成">
+				</div>
+				<div class="am-checkbox">
+					<label><input type="checkbox" id="remberBox"> 记住我 </label>
 					</div>
-					<div class="form-group">
-						<div class="col-sm-2">
-							<label for="Password" class="control-label">密码</label>
-						</div>
-						<div class="col-sm-10">
-							<input type="password" class="form-control" id="Password" placeholder="密码" name="Password">
-							<p class="tips">请输入6-12位密码，由数字和字母组成</p>
-						</div>
-					</div>
-					<div class="form-group">
-						<div class="col-sm-offset-2 col-sm-10">
-							<div class="checkbox">
-								<label><input type="checkbox" id="remberBox"> 记住我 </label>
-							</div>
-						</div>
-					</div>
-					<div class="form-group">
-						<div class="col-sm-offset-2 col-sm-10">
-							<button type="button" class="btn btn-block btn-default" id="login">登录</button>
-						</div>
-					</div>
-				</form>
-			</div>
-		</div>
+				<div class="am-form-group">
+					<button type="button" class="am-btn am-btn-block am-btn-primary" id="login" data-am-modal="{target: '#my-alert'}">登录</button>
+				</div>
+			</fieldset>
+		</form>
 	</div>
 </div>
 <script type="text/javascript">

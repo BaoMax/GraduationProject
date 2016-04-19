@@ -12,6 +12,7 @@ function dialog(text){
 }
 function goBack(){
 	window.history.go(-1);
+  location.reload();
 }
 function more(type){
   var index = window.location.href.indexOf("?");

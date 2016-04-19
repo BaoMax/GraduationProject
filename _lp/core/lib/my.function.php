@@ -88,6 +88,11 @@ function getPreview($course_id,$chapter_index){
 	return $result;
 }
 function insertStudentCourse($student_id,$course_id){
+	$sql = "select * from studentcourse where course_id = '".$course_id."' and student_id = '".$student_id."'";
+	$result = get_data($sql);
+	if(isset($result)&&is_array($result)){
+		return false;
+	}
 	$sql = "insert into studentcourse (course_id,student_id) values('".$course_id."','".$student_id."')";
 	return run_sql($sql);
 }

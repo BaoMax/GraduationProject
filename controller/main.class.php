@@ -54,6 +54,11 @@ class mainController extends appController{
 		if ($flag == "true") {
 			# code...
 			if(!insertStudentCourse($student,$course)){
+				$url = $_SERVER['HTTP_REFERER'];
+				echo "<script type='text/javascript'>";  
+				echo "dialog('课程已加入！');";
+				echo "window.location.href='$url';";  
+				echo "</script>";   
 				return false;
 			}
 		}

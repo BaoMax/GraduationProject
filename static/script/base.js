@@ -10,9 +10,10 @@ function dialog(text){
 	+'</div>';
 	$("body").append(str);
 }
-function goBack(){
-	window.history.go(-1);
-  location.reload();
+function home(){
+  var pos = window.location.href.indexOf("?");
+  var url = window.location.href.slice(0,pos);
+  window.location.href = url + "?c=main&a=mainPage";
 }
 function more(type){
   var index = window.location.href.indexOf("?");
@@ -31,13 +32,12 @@ function userCenter(){
     var course_name = $.cookie("value_"+student_id);
     window.location.href = url + "?c=main&a=userCenter&student_id="+student_id+"&course_name="+course_name;
 }
-// function catalog(){
-// 	  var url = window.location.href;
-//     url = url.slice(0,url.indexOf("?"));
-//     var courseId = $.cookie("key_"+$.cookie("UserName"));
-//     var courseName = $.cookie("value_"+$.cookie("UserName"));
-//     window.location.href = url + "?c=main&a=catalog&course_id="+courseId+"&course_name="+courseName;
-// }
+function catalog(){
+	  var url = window.location.href;
+    url = url.slice(0,url.indexOf("?"));
+    var courseId = getUrlParam("course_id");
+    window.location.href = url + "?c=main&a=catalog&course_id="+courseId;
+}
 function getUrlParam(name){
 	var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
 	var r = window.location.search.substr(1).match(reg);

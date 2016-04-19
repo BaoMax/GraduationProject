@@ -65,7 +65,7 @@ else @include( CROOT . $tfile );
             <a class="am-icon-sm am-icon-file-text-o" href="javascript:cardPage();"> 答题卡</a>
           </li>
           <li id="done" style="display:none;">
-          	<a class="am-icon-sm am-icon-star-o" href="javascript:done();">提交并查看答案</a>
+          	<a href="javascript:done();">提交并查看答案</a>
           </li>
     </ul>
   </div>
@@ -117,15 +117,29 @@ else @include( CROOT . $tfile );
   function collection(){
   	var pos = window.location.href.indexOf("?");
   	var url = window.location.href.slice(0,pos);
-  	var type = $("#slider .am-active-slide").attr("data-type");
-  	var problem_id = $("#slider .am-active-slide").attr("data-id");
-  	var flag = $("#slider .am-active-slide").attr("data-collection");
+  	var target = $("#slider .am-active-slide");
+  	var type = target.attr("data-type");
+  	var problem_id = target.attr("data-id");
+  	var flag = target.attr("data-collection");
   	$.ajax({
   		url:url+"?c=main&a=collection",
   		type:"POST",
   		data:"problem_id="+problem_id+"&problem_type="+type+"&flag="+flag,
   		success:function(data){
-
+  			console.log(data);
+  			if(data){
+  				if(flag == "true"){
+  					target.attr("data-collection","false");
+  					$("#collection a").removeClass("am-icon-star").addClass("am-icon-star-o");
+	  	  			$("#collection a").text("收藏");
+  				}else{
+  					target.attr("data-collection","true");
+  					$("#collection a").removeClass("am-icon-star-o").addClass("am-icon-star");
+	  	  			$("#collection a").text("已收藏");
+  				}
+  			}else{
+  				dialog("数据库错误");
+  			}
   		},
   		error:function(){
   			dialog("Connection error");

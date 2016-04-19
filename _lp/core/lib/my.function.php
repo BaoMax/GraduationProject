@@ -7,6 +7,14 @@ function hasCollectionProblem($student_id,$problem_id,$problem_type,$type){
 	}
 	return false;
 }
+function cancleUserProblem($student_id,$problem_id,$problem_type,$type){
+	$sql = "delete from userproblems where student_id = '".$student_id."' and problem_id = '".$problem_id."' and problem_type = '".$problem_type."' and type = '".$type."'";
+	return run_sql($sql);
+}
+function addUserProblem($student_id,$problem_id,$problem_type,$type){
+	$sql = "insert into userproblems (student_id,problem_id,problem_type,type) values ('".$student_id."','".$problem_id."','".$problem_type."','".$type."')";
+	return run_sql($sql);
+}
 function getCompletion($num,$course,$chapter = null){
 
 	if($chapter != null){
@@ -63,7 +71,7 @@ function getOption($num,$course,$chapter = null){
 		}
 		foreach ($data as $key => $value) {
 			# code...
-			if(hasCollectionProblem($_COOKIE['UserName'],$value['completion_id'],1,0))
+			if(hasCollectionProblem($_COOKIE['UserName'],$value['option_id'],1,0))
 				$data[$key]["collection"] = "true";
 			else
 				$data[$key]["collection"] = "false";

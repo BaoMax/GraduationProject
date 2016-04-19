@@ -82,7 +82,17 @@ class mainController extends appController{
 		}
 		render( $data );
 	}
-
+	function collection(){
+		$problem_id = $_POST["problem_id"];
+		$problem_type = $_POST["problem_type"];
+		$student_id = $_COOKIE["UserName"];
+		$flag = $_POST["flag"];
+		if($flag == "true"){
+			echo cancleUserProblem($student_id,$problem_id,$problem_type,0);
+		}else{
+			echo addUserProblem($student_id,$problem_id,$problem_type,0);
+		}
+	}
 
 	function test(){
 		$data["title"] = $data["top_title"] = "课后测试";

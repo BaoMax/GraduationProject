@@ -27,7 +27,7 @@ p,label{
     margin: 0;
     font-size: 18px;
 }
-#btn-back,#btn-user,#btn-catalog{
+#btn-home,#btn-user,#btn-catalog{
 	display: inline-block;
     width: 44px;
     height: 43px;
@@ -38,7 +38,7 @@ p,label{
     line-height: 43px;
     cursor: pointer;
 }
-#btn-back{
+#btn-home{
 	left: 5px;
 }
 #btn-user,#btn-catalog{

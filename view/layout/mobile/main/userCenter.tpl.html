@@ -2,7 +2,7 @@
 	<span class="am-icon-home am-icon-md" id="btn-home" onclick="home()"></span>
 	<h1><?=$title?></h1>
 </header>
-<div class="section">
+<!-- <div class="section">
 	<div class="container">
 		<div class="row">
 			<div class="col-md-12">
@@ -11,7 +11,6 @@
 						<span style="background-color:green;border-radius:40px;width:40px;height:40px;display:inline-block"></span>
 					</p>
 					<p style="font-size:16px;text-align:center"><b><?=$user?></b></p>
-					<p style="font-size:16px;text-align:center">当前课程：<b><?=$course?></b></p>
 				</div>
 				<div class="panel panel-default" style="margin-top:20px;margin-bottom:10px;">
 					<div style="font-size=20px;width:100%;line-height:300%;padding:0 5px;position:relative">
@@ -39,37 +38,104 @@
 			</div>
 		</div>
 	</div>
+</div> -->
+<section>
+	<div class="am-form-group am-form-file" style="width:33.33%;margin:0 auto;margin-top:1rem;">
+		<img class="am-circle" id="idImg" src="static/image/user.jpg" width="100" height="100"/>
+		<input type="file" accept="image/*;capture=camera">
+	</div>
+	<p class="am-text-center" id="ID"></p>
+</section>
+<div class="am-g">
+	<ul class="am-list am-u-md-12 am-u-sm-12">
+		<li class="am-padding-horizontal-xs am-cf">
+			<a href="javascript:courseManage()"><i class="am-icon-file-text am-icon-sm am-fl"></i>课程管理<i class="am-icon-chevron-right am-fr"></i></a>
+		</li>
+		<li class="am-padding-horizontal-xs am-cf">
+			<a href="javascript:errorProblems()"><i class="am-icon-question-circle am-icon-sm am-fl"></i>我的错题<i class="am-icon-chevron-right am-fr"></i></a>
+		</li>
+		<li class="am-padding-horizontal-xs am-cf">
+			<a href="javascript:collectionProblems()"><i class="am-icon-star am-icon-sm am-fl"></i>我的收藏<i class="am-icon-chevron-right am-fr"></i></a>
+		</li>
+		<li class="am-padding-horizontal-xs am-cf">
+			<a href="javascript:changePassword()"><i class="am-icon-question-circle am-icon-sm am-fl"></i>修改密码<i class="am-icon-chevron-right am-fr"></i></a>
+		</li>
+		<li class="am-padding-horizontal-xs am-cf">
+			<a href="javascript:message()"><i class="am-icon-bell am-icon-sm am-fl"></i>我的消息<i class="am-icon-chevron-right am-fr"></i></a>
+		</li>
+	</ul>
+	<div class="am-u-sm-12 am-u-md-12">
+		<a href="javascript:logout()" class="am-btn am-btn-block am-btn-lg am-btn-danger">退出当前账号</a>
+	</div>
 </div>
 <script type="text/javascript">
-	function selectCourse(){
-		var url = window.location.href;
-	    url = url.slice(0,url.indexOf("?"));
-	    window.location.href = url + "?c=main&a=selectCourse";
+	$(document).ready(function(){
+		var id = $.cookie("UserName");
+		$("#ID").text(id);
+		$("input[type='file']").on("change",function(){
+			console.log(this.files[0]);
+			var file = this.files[0];
+			var reader = new FileReader();
+			reader.onload = function(){
+				console.log(reader.result);
+				var url = reader.result;
+				setImageURL(url);
+			};
+			reader.readAsDataURL(file);
+		});
+		// var img = $("#idImg");
+		var img = new Image();
+		function setImageURL(url){
+	    	img.src=url;
+		}
+		img.onload = function(){
+			$("body").append(img);
+		}
+	});
+	function courseManage(){
+		var pos = window.location.href.indexOf("?");
+	    url = window.location.href.slice(0,pos);
+	    window.location.href = url + "?c=main&a=courseManage";
 	}
 	function errorProblems(){
+		var pos = window.location.href.indexOf("?");
+	    url = window.location.href.slice(0,pos);
+	    window.location.href = url + "?c=main&a=errorProblems";
+	}
+	function collectionProblems(){
+		var pos = window.location.href.indexOf("?");
+	    url = window.location.href.slice(0,pos);
+	    window.location.href = url + "?c=main&a=collectionProblems";
+	}
+	function changePassword(){
+		var pos = window.location.href.indexOf("?");
+	    url = window.location.href.slice(0,pos);
+	    window.location.href = url + "?c=main&a=changePassword";
+	}
+	function message(){
 
 	}
-	function scoreList(){
-		var url = window.location.href;
-	    url = url.slice(0,url.indexOf("?"));
-	    var student_id = $.cookie("UserName");
-	    var course_id = $.cookie("key_"+student_id);
-	    if(course_id){
-	    	window.location.href = url + "?c=main&a=score&student_id="+student_id+"&course_id="+course_id;
-	    }else{
-	    	dialog("当前未选择课程，请先选择课程");
-	    }
-	}
+	// function scoreList(){
+	// 	var url = window.location.href;
+	//     url = url.slice(0,url.indexOf("?"));
+	//     var student_id = $.cookie("UserName");
+	//     var course_id = $.cookie("key_"+student_id);
+	//     if(course_id){
+	//     	window.location.href = url + "?c=main&a=score&student_id="+student_id+"&course_id="+course_id;
+	//     }else{
+	//     	dialog("当前未选择课程，请先选择课程");
+	//     }
+	// }
 	function logout(){
-	    $.cookie("UserName","",{ expires: -1 });
-	    $.cookie("Password","",{ expires: -1 });
-	    $.cookie("remberBox","",{ expires: -1 });
-	  	$.cookie("key_"+$.cookie("UserName"),"",{ expires: -1 });
-	  	$.cookie("value_"+$.cookie("Password"),"",{ expires: -1 });
-	  	$.cookie("max_"+$.cookie("Password"),"",{ expires: -1 });
+	   //  $.cookie("UserName","",{ expires: -1 });
+	   //  $.cookie("Password","",{ expires: -1 });
+	   //  $.cookie("remberBox","",{ expires: -1 });
+	  	// $.cookie("key_"+$.cookie("UserName"),"",{ expires: -1 });
+	  	// $.cookie("value_"+$.cookie("Password"),"",{ expires: -1 });
+	  	// $.cookie("max_"+$.cookie("Password"),"",{ expires: -1 });
 
-	    var url = window.location.href;
-	    url = url.slice(0,url.indexOf("?"));
-	    window.location.href = url;
+	   //  var url = window.location.href;
+	   //  url = url.slice(0,url.indexOf("?"));
+	   //  window.location.href = url;
 	}
 </script>

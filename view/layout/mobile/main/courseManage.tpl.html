@@ -1,0 +1,98 @@
+<header class="header">
+	<span class="am-icon-angle-left am-icon-md" id="btn-home" onclick="userCenter()"></span>
+	<h1><?=$title?></h1>
+</header>
+<h3 class="my-header">已选课程</h3>
+<ul class="am-list confirm-list" id="doc-modal-list1">
+	<?php
+		if(isset($myCourse) && is_array($myCourse)){
+			foreach ($myCourse as $value) {
+				# code...
+			?>
+				<li class="am-cf am-padding-horizontal-xs" style="line-height:300%;" data-id="<?=$value['course_id']?>"><?=$value['course_name']?><i class="am-icon-trash am-icon-sm am-fr"></i></li>
+			<?php
+			}
+		}	
+	?>
+</ul>
+<div class="am-modal am-modal-confirm" tabindex="-1" id="my-confirm">
+  <div class="am-modal-dialog">
+    <div class="am-modal-hd">课程管理</div>
+    <div class="am-modal-bd" id="text">
+    </div>
+    <div class="am-modal-footer">
+      <span class="am-modal-btn" data-am-modal-cancel>取消</span>
+      <span class="am-modal-btn" data-am-modal-confirm>确定</span>
+    </div>
+  </div>
+</div>
+<h3 class="my-header">可选课程</h3>
+<ul class="am-list confirm-list" id="doc-modal-list2">
+	<?php
+		if(isset($course) && is_array($course)){
+			foreach ($course as $value) {
+				# code...
+			?>
+				<li class="am-cf am-padding-horizontal-xs" style="line-height:300%;" data-id="<?=$value['course_id']?>"><?=$value['course_name']?><i class="am-icon-plus am-icon-sm am-fr"></i></li>
+			<?php
+			}
+		}	
+	?>
+</ul>
+<script type="text/javascript">
+	$(document).ready(function () {
+		$('#doc-modal-list1').find('.am-icon-trash').add('#doc-confirm-toggle').on('click', function() {
+			var target = $(this).parent();
+			$("#text").text("确定要删除此课程吗？");
+	      	$('#my-confirm').modal({
+	        	onConfirm: function(options) {
+		        	var course_id = target.attr("data-id");
+		        	var pos = window.location.href.indexOf("?");
+		        	var url = window.location.href.slice(0,pos);
+		        	$.ajax({
+		        		url:url+"?c=main&a=delCourse",
+		        		type:"POST",
+		        		data:"course_id="+course_id,
+		        		success:function(data){
+		        			if(data == "1"){
+		        				location.reload();
+		        			}
+		        		},
+		        		error:function(){
+		        			dialog("Connect Error");
+		        		}
+	        		});
+	        },
+	        onCancel: function() {
+	        }
+	      });
+	    });
+
+	    $('#doc-modal-list2').find('.am-icon-plus').add('#doc-confirm-toggle').on('click', function() {
+			var target = $(this).parent();
+			$("#text").text("确定要添加此课程吗？");
+	      	$('#my-confirm').modal({
+	        	onConfirm: function(options) {
+		        	var course_id = target.attr("data-id");
+		        	var pos = window.location.href.indexOf("?");
+		        	var url = window.location.href.slice(0,pos);
+		        	$.ajax({
+		        		url:url+"?c=main&a=checkCourse",
+		        		type:"POST",
+		        		data:"course_id="+course_id,
+		        		success:function(data){
+		        			if(data == "1"){
+		        				location.reload();
+		        			}
+		        		},
+		        		error:function(){
+		        			dialog("Connect Error");
+		        		}
+	        		});
+	        },
+	        onCancel: function() {
+	        }
+	      });
+	    });
+	});
+</script>

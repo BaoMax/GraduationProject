@@ -43,7 +43,7 @@ $(document).ready(function(){
 	var url_link = window.location.href.slice(0,window.location.href.indexOf("?"));
 	$('#register').click(function(){
 		$.ajax({
-			type: "POST",
+		type: "POST",
             url: url_link+'?c=register&a=register_test',//提交的URL
             data: $('#form').serialize(), // 要提交的表单,必须使用name属性              
             success: function (data) {
@@ -61,4 +61,25 @@ $(document).ready(function(){
 		});
 	});
 
+	var url_link = window.location.href.slice(0,window.location.href.indexOf("?"));
+	$('#change').click(function(){
+            // alert("aaa");
+		$.ajax({
+		type: "POST",
+            url: url_link+'?c=main&a=change_test',//提交的URL
+            data: $('#form').serialize(), // 要提交的表单,必须使用name属性              
+            success: function (data) {
+                  if(data == "1"){
+                  	var url = window.location.href;
+                  	url = url.slice(0,url.indexOf("?"));
+                  	window.location.href = url + "?c=login&a=login";
+                  }else{
+                  	dialog("用户名或密码错误！");
+                  }
+            },
+            error: function (request) {
+                 dialog("Connection error");
+            }
+		});
+	});
 });

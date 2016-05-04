@@ -2,12 +2,15 @@
 if( !defined('IN') )die('bad request');
 include_once( AROOT . 'controller'.DS.'app.class.php' );
 
+include_once( CROOT . 'lib' . DS . 'wechat.function.php' );
+
 class firstController extends appController{
 	function __construct(){
 		parent::__construct();
 	}
 
 	function index(){
+
 		$data['title'] = $data['top_title'] = 'Welcome';
 		render( $data );
 	}

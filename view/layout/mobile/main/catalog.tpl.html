@@ -16,13 +16,15 @@ else @include( CROOT . $tfile );
           <div data-tab-panel-0 class="am-tab-panel am-active">
           	<ul class="am-list">
             <?php
-            	foreach ($chapter as $value) {
-            		# code...
-            	?>
-            	<li class="am-g">
-          			<a href="javascript:pre(<?=$value['chapter_index']?>);" class="am-list-item-hd "><?=$value['chapter_name']?></a>
-          		</li>	
-            	<?php
+              if(isset($chapter) && is_array($chapter)){
+              	foreach ($chapter as $value) {
+              		# code...
+              	?>
+              	<li class="am-g">
+            			<a href="javascript:pre(<?=$value['chapter_index']?>);" class="am-list-item-hd "><?=$value['chapter_name']?></a>
+            		</li>	
+              	<?php
+                }
             	}
             ?>
             </ul>
@@ -89,7 +91,14 @@ else @include( CROOT . $tfile );
         dataType:"json",
         success:function(data){
           if(data){
-            window.location.href = url + "?c=main&a=preview&course_id="+course_id+"&chapter_index="+data.chapter_index;
+            if(data.chapter_index == 0){
+              dialog("课程已学习完成！");
+              $("#my-alert").on("closed.modal.amui",function(){
+                location.reload();
+              });
+            }else{
+              window.location.href = url + "?c=main&a=preview&course_id="+course_id+"&chapter_index="+data.chapter_index;
+            }
           }else{
             dialog("数据库错误");
           }

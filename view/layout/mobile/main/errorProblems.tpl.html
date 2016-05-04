@@ -1,0 +1,39 @@
+<header class="header">
+	<span class="am-icon-angle-left am-icon-md" id="btn-home" onclick="userCenter()"></span>
+	<h1><?=$title?></h1>
+</header>
+<?php
+	if (isset($problem) && is_array($problem)) {
+		# code...
+		foreach ($problem as $key => $value) {
+			# code...
+		?>
+			<h3 class="my-header"><?=$value["course_name"]?><a class="am-badge am-badge-danger am-margin-horizontal-xs"><?=$value["sum"]?></a></h3>
+			<ul class="am-list">
+				<?php
+					if(!$value["completion"]){
+						$value["completion"] = "0";
+					}
+					if(!$value["options"]){
+						$value["options"] = "0";
+					}
+				?>
+				<li class="am-padding-horizontal-xs" style="line-height:300%;">填空题：<?=$value["completion"]?><span class="am-fr"><a class="practice am-badge am-badge-danger am-margin-horizontal-xs" data-id="<?=$value['course_id']?>" data-type="0">练习</a></span></li>
+				<li class="am-padding-horizontal-xs" style="line-height:300%;">选择题：<?=$value["options"]?><span class="am-fr"><a class="practice am-badge am-badge-danger am-margin-horizontal-xs" data-id="<?=$value['course_id']?>" data-type="1">练习<a></span></li>
+			</ul>
+		<?php
+		}
+	}
+?>
+<script type="text/javascript">
+	$(document).ready(function (argument) {
+		// body...
+		$(".practice").on("click",function(){
+			var course_id = $(this).attr("data-id");
+			var type = $(this).attr("data-type");
+			var pos = window.location.href.indexOf("?");
+			var url = window.location.href.slice(0,pos);
+			window.location.href = url +"?c=main&a=errorPractice&course_id="+course_id+"&type="+type;
+		});
+	});
+</script>

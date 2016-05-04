@@ -1,0 +1,21 @@
+<header class="header">
+	<span class="am-icon-angle-left am-icon-md" id="btn-home" onclick="back()"></span>
+	<h1><?=$title?></h1>
+</header>
+<?php 
+$tfile = 'view' . DS . 'layout' . DS  . g('layout') . DS . problems . '.tpl.html' ;
+if( file_exists( AROOT . $tfile ) ) include( AROOT . $tfile );
+else @include( CROOT . $tfile );
+?>
+<script type="text/javascript">
+	function cont(){
+	    var pos = window.location.href.indexOf("?");
+	    var url = window.location.href.slice(0,pos);
+	    window.location.href = url + "?c=main&a=mainPage";
+	}
+	function back(){
+		var pos = window.location.href.indexOf("?");
+	    var url = window.location.href.slice(0,pos);
+	    window.location.href = url + "?c=main&a=collectionProblems";
+	}
+</script>

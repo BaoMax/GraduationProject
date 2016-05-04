@@ -24,14 +24,6 @@ class mainController extends appController{
 		$data["course"] = getCourseByType($type);
 		render( $data );
 	}
-	function selectCourse(){
-		$data = array();
-		$data["title"] = $data["top_title"] = "选择课程";
-		$result = getCourse();
-		$data["course"] = $result;
-		render( $data );
-	}
-
 	function catalog(){
 		$data = array();
 		$data["title"] = $data["top_title"] = "课程介绍";
@@ -41,11 +33,15 @@ class mainController extends appController{
 		$data['flag'] = hasCourseByStudentId($_COOKIE['UserName'],$courseId);
 		render( $data );
 	}
-
 	function checkCourse(){
 		$course = $_POST["course_id"];
 		$student = $_COOKIE['UserName'];
 		echo insertStudentCourse($student,$course);
+	}
+	function delCourse(){
+		$course = $_POST["course_id"];
+		$student = $_COOKIE["UserName"];
+		echo deleteStudentCourse($student,$course);
 	}
 	function cont(){
 		$course_id = $_POST["course_id"];
@@ -74,7 +70,6 @@ class mainController extends appController{
 			$data["completion"] = array();
 			$data["completion"] = $temp;
 		}
-
 		$temp = getOption(5,$course,$chapter);
 		if( isset( $temp ) && is_array( $temp )){
 			$data["options"] = array();
@@ -93,26 +88,120 @@ class mainController extends appController{
 			echo addUserProblem($student_id,$problem_id,$problem_type,0);
 		}
 	}
-
-	function test(){
-		$data["title"] = $data["top_title"] = "课后测试";
-		$course = $_GET["course_id"];
-		$chapter = $_GET["chapter_id"];
-
-		$temp = getCompletion(5,$course,$chapter);
-		if( isset( $temp ) && is_array( $temp )){
-			$data["completion"] = array();
-			$data["completion"] = $temp;
+	function insertError(){
+		$problem_id = $_POST["problem_id"];
+		$problem_type = $_POST["problem_type"];
+		$student_id = $_COOKIE["UserName"];
+		$flag = $_POST["flag"];
+		if($flag == "true"){
+			echo addUserProblem($student_id,$problem_id,$problem_type,1);
+		}else{
+			echo cancleUserProblem($student_id,$problem_id,$problem_type,1);
 		}
+	}
+	function getMaxChapter(){
+		$course_id = $_POST["course_id"];
+		$result = getCourseById($course_id);
+		echo $result["chapter_max"];
+	}
 
-		$temp = getOption(5,$course,$chapter);
-		if( isset( $temp ) && is_array( $temp )){
-			$data["options"] = array();
-			$data["options"] = $temp;
+	function courseManage(){
+		$data["title"] = $data["top_title"] = "课程管理";
+		$data["myCourse"] = getStudentCourse($_COOKIE["UserName"]);
+		$data["course"] = getOtherCourse($_COOKIE["UserName"]);
+		render( $data );
+	}
+	function errorProblems(){
+		$data["title"] = $data["top_title"] = "我的错题";
+		$result = getProblems($_COOKIE["UserName"],"1");
+		$temp = array();
+		if(isset($result["completion"]) && is_array($result["completion"])){
+			foreach ($result["completion"] as $key => $value) {
+				# code...
+				$temp[$value["course_id"]]["course_id"] = $value["course_id"];
+				$temp[$value["course_id"]]["course_name"] = $value["course_name"];
+				$temp[$value["course_id"]]["completion"] = $value["num"];
+				$temp[$value["course_id"]]["sum"] = $value["num"];
+			}
+		}
+		if(isset($result["options"]) && is_array($result["options"])){
+			foreach ($result["options"] as $key => $value) {
+				# code...
+				$temp[$value["course_id"]]["options"] = $value["num"];
+				$temp[$value["course_id"]]["course_id"] = $value["course_id"];
+				$temp[$value["course_id"]]["course_name"] = $value["course_name"];
+				$temp[$value["course_id"]]["sum"] = $temp[$value["course_id"]]["sum"] + $value["num"];
+			}
+		}
+		$data["problem"] = $temp;
+		render( $data );
+	}
+	function collectionProblems(){
+		$data["title"] = $data["top_title"] = "我的收藏";
+		$result = getProblems($_COOKIE["UserName"],"0");
+		$temp = array();
+		if(isset($result["completion"]) && is_array($result["completion"])){
+			foreach ($result["completion"] as $key => $value) {
+				# code...
+				$temp[$value["course_id"]]["course_id"] = $value["course_id"];
+				$temp[$value["course_id"]]["course_name"] = $value["course_name"];
+				$temp[$value["course_id"]]["completion"] = $value["num"];
+				$temp[$value["course_id"]]["sum"] = $value["num"];
+			}
+		}
+		if(isset($result["options"]) && is_array($result["options"])){
+			foreach ($result["options"] as $key => $value) {
+				# code...
+				$temp[$value["course_id"]]["options"] = $value["num"];
+				$temp[$value["course_id"]]["course_id"] = $value["course_id"];
+				$temp[$value["course_id"]]["course_name"] = $value["course_name"];
+				$temp[$value["course_id"]]["sum"] = $temp[$value["course_id"]]["sum"] + $value["num"];
+			}
+		}
+		$data["problem"] = $temp;
+		render( $data );
+	}
+	function errorPractice(){
+		$data["title"] = $data["top_title"] = "错题练习";
+		$course_id = $_GET["course_id"];
+		$type = $_GET["type"];
+		if($type == "0"){
+			$data["completion"] = getProblemsCompletion($_COOKIE["UserName"],$course_id,"1");
+		}else{
+			$data["options"] = getProblemsOptions($_COOKIE["UserName"],$course_id,"1");
 		}
 		render( $data );
 	}
-
+	function collectionPractice(){
+		$data["title"] = $data["top_title"] = "收藏题练习";
+		$course_id = $_GET["course_id"];
+		$type = $_GET["type"];
+		if($type == "0"){
+			$data["completion"] = getProblemsCompletion($_COOKIE["UserName"],$course_id,"0");
+		}else{
+			$data["options"] = getProblemsOptions($_COOKIE["UserName"],$course_id,"0");
+		}
+		render( $data );
+	}
+	function changePassword(){
+		$data['title'] = $data['top_title'] = '修改密码';
+		$data['js'] = array('login.js');
+		render( $data );
+	}
+	function change_test(){
+		$username = $_POST["UserName"];
+		$oldpassword = $_POST["oldPassword"];
+		$newpassword = $_POST["newPassword"];
+		$sql = "select * from student where student_name='".$username."' and password= sha1('".$oldpassword."')";
+        // echo get_data($sql);              
+		if(!get_data($sql)){
+			echo false;
+		}else{
+			$sql = "update student set password = sha1('".$newpassword."') where student_name = '".$username."'";
+			run_sql($sql);            
+			echo true;
+		}
+	}
 	function exam(){
 		$data["title"] = $data["top_title"] = "期末考试";
 		$course = $_GET["course_id"];
@@ -137,7 +226,7 @@ class mainController extends appController{
 		$course_id = $_POST["course_id"];
 		$type = $_POST["type"];
 		$chapter_id = $_POST["chapter_id"];
-		$student_id = $_POST["student_id"];
+		$student_id = $_COOKIE["UserName"];
 
 		if($type == "preview"){
 			$type = 0;
@@ -193,11 +282,6 @@ class mainController extends appController{
 
 	function userCenter(){
 		$data["title"] = $data["top_title"] = "个人中心";
-		$data["user"] = $_GET["student_id"];
-		$data["course"] = $_GET["course_name"];
-		if($data["course"] == undefined){
-			$data["course"] = "未选择课程";
-		}
 		render( $data );
 	}	
 }

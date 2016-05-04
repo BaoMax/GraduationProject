@@ -1,14 +1,20 @@
 function dialog(text){
-	var str = '<div class="am-modal am-modal-alert" tabindex="-1" id="my-alert">'
-  		+'<div class="am-modal-dialog">'
-   		 	+'<div class="am-modal-hd"></div>'
-   		 	+'<div class="am-modal-bd">'+text+'</div>'
-   		 	+'<div class="am-modal-footer">'
-     		 	+'<span class="am-modal-btn">确定</span>'
-   		 	+'</div>'
-  		+'</div>'
-	+'</div>';
-	$("body").append(str);
+  console.log($("#my-alert"));
+  if($("#my-alert").length){
+    $("#dialog_text").text(text);
+  }else{
+    var str = '<div class="am-modal am-modal-alert" tabindex="-1" id="my-alert">'
+          +'<div class="am-modal-dialog">'
+          +'<div class="am-modal-hd"></div>'
+          +'<div class="am-modal-bd" id="dialog_text">'+text+'</div>'
+          +'<div class="am-modal-footer">'
+          +'<span class="am-modal-btn" id="sure">确定</span>'
+          +'</div>'
+          +'</div>'
+          +'</div>';
+    $("body").append(str);
+  }
+  $("#my-alert").modal("open");
 }
 function home(){
   var pos = window.location.href.indexOf("?");
@@ -28,9 +34,7 @@ function course(course_id){
 function userCenter(){
 	var url = window.location.href;
     url = url.slice(0,url.indexOf("?"));
-    var student_id = $.cookie("UserName"); 
-    var course_name = $.cookie("value_"+student_id);
-    window.location.href = url + "?c=main&a=userCenter&student_id="+student_id+"&course_name="+course_name;
+    window.location.href = url + "?c=main&a=userCenter";
 }
 function catalog(){
 	  var url = window.location.href;

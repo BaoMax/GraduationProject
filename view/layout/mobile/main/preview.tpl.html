@@ -5,26 +5,15 @@ else @include( CROOT . $tfile );
 ?>
 <h3 class="am-text-center"><?=$chapter['chapter_name']?></h3>
 <div id="player" style="height: 200px;width: 100%;">
-	<video id="vedio" src="<?=$preview['vedio_url']?>" width="100%" controls="controls">
-	Your browser does not support the video tag.
-	</video>
-	<!-- <div id="controller">
-		<span id="progress">
-  			<spn class="inner"></span>
-		</span>
-		<div id="vedio-btn">
-			<span class="icon am-icon-play" id="play"></span>
-			<span class="icon am-icon-stop" id="stop"></span>
-			<span id="time-start" class="time">00:00/</span>
-			<span id="time-end" class="time">00:00</span>
-			<span id="volume-icon" class="icon am-icon-volume-up"></span>
-			<span id="volume">
-				<span class="inner"></span>
-			</span>
-			<span class="icon am-icon-download" id="download"></span>
-			<span id="full-screen" class="icon am-icon-expand"></span>
-		<div>
-	</div> -->
+	<?php 
+		if(isset($preview) && is_array($preview)){
+		?>
+			<video id="vedio" src="<?=$preview['vedio_url']?>" width="100%" controls="controls">
+			Your browser does not support the video tag.
+			</video>
+		<?php	
+		}
+	?>
 </div>
 <div class="am-margin-vertical-xs am-margin-horizontal-xs">
 <?php
@@ -131,10 +120,26 @@ else @include( CROOT . $tfile );
 	// 	});
 	// });
 function practice(chapter_index){
+	/**添加记录**/
+	var course_id = getUrlParam("course_id");
+	var chapter_index = getUrlParam("chapter_index");
+	var type = "preview";
+	var score = 100;
 	var pos = window.location.href.indexOf("?");
 	var url = window.location.href.slice(0,pos);
-	var course_id = getUrlParam("course_id");
-	window.location.href = url + "?c=main&a=practice&course_id="+course_id+"&chapter_index="+chapter_index;
+	$.ajax({
+		url:url + "?c=main&a=record",
+		data:"course_id="+course_id+"&chapter_id="+chapter_index+"&score="+score,
+		type:"post",
+		success:function(data){
+			if(data == "1"){
+			window.location.href = url + "?c=main&a=practice&course_id="+course_id+"&chapter_index="+chapter_index;
+			}
+		},
+		error:function(){
+			dialog("Connection error");
+		}
+	});
 }
 function add(){
 	var pos = window.location.href.indexOf("?");

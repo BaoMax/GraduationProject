@@ -1,8 +1,3 @@
-<?php 
-$tfile = 'view' . DS . 'layout' . DS  . g('layout') . DS . header2 . '.tpl.html' ;
-if( file_exists( AROOT . $tfile ) ) include( AROOT . $tfile );
-else @include( CROOT . $tfile );
-?>
 <div class="am-slider am-slider-default"  id="slider">
   <ul class="am-slides">
     <?php
@@ -122,45 +117,45 @@ else @include( CROOT . $tfile );
   var correctCount = 0;
   var notFill = count;
   $(document).ready(function  (argument) {
-  	// body...
-  	$('#slider').flexslider({
+    // body...
+    $('#slider').flexslider({
     // options
-	  animationLoop: false,            // Boolean: 是否循环播放
-	  slideshow: false,                // Boolean: 是否自动播放
-	  controlNav: false,               // Boolean: 是否创建控制点
-  	directionNav: false,             // Boolean: 是否创建上/下一个按钮（previous/next）
-  	after: function(slider){
-  	  	var collection = $("#slider .am-active-slide").attr("data-collection");
-  	  	var now = slider.currentSlide + 1;
+    animationLoop: false,            // Boolean: 是否循环播放
+    slideshow: false,                // Boolean: 是否自动播放
+    controlNav: false,               // Boolean: 是否创建控制点
+    directionNav: false,             // Boolean: 是否创建上/下一个按钮（previous/next）
+    after: function(slider){
+        var collection = $("#slider .am-active-slide").attr("data-collection");
+        var now = slider.currentSlide + 1;
         if(slider.currentSlide!= count){
            currentSlide = slider.currentSlide;
         }
-  	  	$("#number a").text(now+"/"+(slider.count-1));
-  	  	if(now == slider.count){
-  	  		$("#cardPage").css("display","none");
-	  	  	$("#collection").css("display","none");
-	  	  	$("#number").css("display","none");
-	  	  	$("#done").css("display","table-cell");
-	  	  }else{
-	  	  	$("#cardPage").css("display","table-cell");
-	  	  	$("#collection").css("display","table-cell");
-	  	  	$("#number").css("display","table-cell");
-	  	  	$("#done").css("display","none");
-	  	  	if(collection == "true"){
-	  	  		$("#collection a").removeClass("am-icon-star-o").addClass("am-icon-star");
-	  	  		$("#collection a").text("已收藏");
-	  	  	}else{
-	  	  		$("#collection a").removeClass("am-icon-star").addClass("am-icon-star-o");
-	  	  		$("#collection a").text("收藏");
-	  	  	}
-	  	  }
-  	  }
-  	});
-  	var collection = $("#slider .am-active-slide").attr("data-collection");
-  	if(collection == "true"){
-  		$("#collection a").removeClass("am-icon-star-o").addClass("am-icon-star");
-  	  	$("#collection a").text("已收藏");
-  	}
+        $("#number a").text(now+"/"+(slider.count-1));
+        if(now == slider.count){
+          $("#cardPage").css("display","none");
+          $("#collection").css("display","none");
+          $("#number").css("display","none");
+          $("#done").css("display","table-cell");
+        }else{
+          $("#cardPage").css("display","table-cell");
+          $("#collection").css("display","table-cell");
+          $("#number").css("display","table-cell");
+          $("#done").css("display","none");
+          if(collection == "true"){
+            $("#collection a").removeClass("am-icon-star-o").addClass("am-icon-star");
+            $("#collection a").text("已收藏");
+          }else{
+            $("#collection a").removeClass("am-icon-star").addClass("am-icon-star-o");
+            $("#collection a").text("收藏");
+          }
+        }
+      }
+    });
+    var collection = $("#slider .am-active-slide").attr("data-collection");
+    if(collection == "true"){
+      $("#collection a").removeClass("am-icon-star-o").addClass("am-icon-star");
+        $("#collection a").text("已收藏");
+    }
 
     $(".options").delegate("label","click",function(){
       var now = $("#slider .am-active-slide");
@@ -186,39 +181,39 @@ else @include( CROOT . $tfile );
   });
   
   function cardPage(){
-  	$("#slider").flexslider(Number(count));
+    $("#slider").flexslider(Number(count));
   };
   function collection(){
-  	var pos = window.location.href.indexOf("?");
-  	var url = window.location.href.slice(0,pos);
-  	var target = $("#slider .am-active-slide");
-  	var type = target.attr("data-type");
-  	var problem_id = target.attr("data-id");
-  	var flag = target.attr("data-collection");
-  	$.ajax({
-  		url:url+"?c=main&a=collection",
-  		type:"POST",
-  		data:"problem_id="+problem_id+"&problem_type="+type+"&flag="+flag,
-  		success:function(data){
-  			console.log(data);
-  			if(data){
-  				if(flag == "true"){
-  					target.attr("data-collection","false");
-  					$("#collection a").removeClass("am-icon-star").addClass("am-icon-star-o");
-	  	  			$("#collection a").text("收藏");
-  				}else{
-  					target.attr("data-collection","true");
-  					$("#collection a").removeClass("am-icon-star-o").addClass("am-icon-star");
-	  	  			$("#collection a").text("已收藏");
-  				}
-  			}else{
-  				dialog("数据库错误");
-  			}
-  		},
-  		error:function(){
-  			dialog("Connection error");
-  		}
-  	});
+    var pos = window.location.href.indexOf("?");
+    var url = window.location.href.slice(0,pos);
+    var target = $("#slider .am-active-slide");
+    var type = target.attr("data-type");
+    var problem_id = target.attr("data-id");
+    var flag = target.attr("data-collection");
+    $.ajax({
+      url:url+"?c=main&a=collection",
+      type:"POST",
+      data:"problem_id="+problem_id+"&problem_type="+type+"&flag="+flag,
+      success:function(data){
+        console.log(data);
+        if(data){
+          if(flag == "true"){
+            target.attr("data-collection","false");
+            $("#collection a").removeClass("am-icon-star").addClass("am-icon-star-o");
+              $("#collection a").text("收藏");
+          }else{
+            target.attr("data-collection","true");
+            $("#collection a").removeClass("am-icon-star-o").addClass("am-icon-star");
+              $("#collection a").text("已收藏");
+          }
+        }else{
+          dialog("数据库错误");
+        }
+      },
+      error:function(){
+        dialog("Connection error");
+      }
+    });
   }
   function select(i){
     $("#slider").flexslider(Number(i)-1);
@@ -301,44 +296,5 @@ else @include( CROOT . $tfile );
   // }
   function agin(){
     location.reload();
-  }
-  function cont(){
-    /**添加记录**/
-    var pos = window.location.href.indexOf("?");
-    var url = window.location.href.slice(0,pos);
-    var course_id = getUrlParam("course_id");
-    var chapter_index = getUrlParam("chapter_index");
-    var score = (100/count)*correctCount;
-    var type = "test";
-    $.ajax({
-      url:url+"?c=main&a=record",
-      data:"course_id="+course_id+"&chapter_id="+chapter_index+"&score="+score+"&type="+type,
-      type:"POST",
-      success:function(data){
-        if(data == "1"){
-          $.ajax({
-            url:url+"?c=main&a=getMaxChapter",
-            data:"course_id="+course_id,
-            type:"POST",
-            success:function(data){
-              if(data == chapter_index){
-                dialog("已经是最后一章！");
-                $("#my-alert").on("closed.modal.amui",function(){
-                  window.location.href = url+"?c=main&a=catalog&course_id="+course_id;
-                });
-              }else{
-                window.location.href = url+"?c=main&a=preview&course_id="+course_id+"&chapter_index="+(Number(chapter_index)+1);
-              }
-            },
-            error:function(){
-              dialog("Connection error");
-            }
-          });
-        }
-      },
-      error:function(){
-        dialog("Connection error");
-      }
-    });
   }
 </script>

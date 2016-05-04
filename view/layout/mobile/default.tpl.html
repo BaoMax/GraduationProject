@@ -10,19 +10,15 @@
 <meta name="format-detection"content="telphone=no, email=no" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
-<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-<!-- <script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>	 -->
-<link href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-<link rel="stylesheet" type="text/css" href="http://cdn.amazeui.org/amazeui/2.6.1/css/amazeui.css">
-<!-- <link href="http://pingendo.github.io/pingendo-bootstrap/themes/default/bootstrap.css" rel="stylesheet" type="text/css"> -->
+<script type="text/javascript" src="static/script/jquery.min.js"></script>
+<link href="static/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" type="text/css" href="static/css/amazeui.css">
 <link rel="stylesheet" type="text/css" href="static/css/common.css">
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+<script type="text/javascript" src="static/script/jquery.cookie.js"></script>
 <?php if( isset($css) && is_array( $css ) ): ?>
         <?php foreach( $css as $cfile ): ?><link rel="stylesheet" type="text/css" href="static/css/<?=$cfile?>">
         <?php endforeach; ?>
 <?php endif; ?>
-<!-- <script type="text/javascript" src="http://lib.sinaapp.com/js/jq.mobi/1.0/jq.mobi.min.js"></script>  -->
-<!-- <script type="text/javascript" src="http://lib.sinaapp.com/js/jq.mobi/1.0/jq.ui.min.js"></script>  -->
 <script type="text/javascript">
 	var c = "<?php echo g('c');?>";
 	c = c.toString();
@@ -42,7 +38,7 @@ else @include( CROOT . $tfile );
 ?>
 </div>
 <script type="text/javascript" src="static/script/base.js"></script>
-<script type="text/javascript" src="http://cdn.amazeui.org/amazeui/2.6.1/js/amazeui.js"></script>
+<script type="text/javascript" src="static/script/amazeui.js"></script>
     <?php if( isset($js) && is_array( $js ) ): ?>
         <?php foreach( $js as $jfile ): ?><script type="text/javascript" src="static/script/<?=$jfile;?>" ></script>
         <?php endforeach; ?>

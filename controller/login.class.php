@@ -24,7 +24,6 @@ class loginController extends appController{
 		$username = $_POST["UserName"];
 		$password = $_POST["Password"];
 		$rember = $_GET["rember"];
-		// $test_password = sha1($password);
 		$sql = "select * from student
                          where student_name='".$username."' and password= sha1('".$password."')";               
 		if(!get_data($sql)){
@@ -42,6 +41,9 @@ class loginController extends appController{
 			setcookie("remberBox",$rember,time()+3600*24*3);
 			echo true;
 		}
+	}
+	function teacher_login_test(){
+		echo true;
 	}
 	
 }

@@ -193,14 +193,21 @@ class mainController extends appController{
 		$oldpassword = $_POST["oldPassword"];
 		$newpassword = $_POST["newPassword"];
 		$sql = "select * from student where student_name='".$username."' and password= sha1('".$oldpassword."')";
-        // echo get_data($sql);              
+             
 		if(!get_data($sql)){
 			echo false;
 		}else{
 			$sql = "update student set password = sha1('".$newpassword."') where student_name = '".$username."'";
-			run_sql($sql);            
+			run_sql($sql); 
+			setcookie("Password",$password,time()-3600);
 			echo true;
 		}
+	}
+	function logout(){
+		setcookie("Password",$password,time()-3600);
+		setcookie("UserName",$password,time()-3600);
+		setcookie("remberBox",$password,time()-3600);
+		echo true;
 	}
 	function exam(){
 		$data["title"] = $data["top_title"] = "期末考试";

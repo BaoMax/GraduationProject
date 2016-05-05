@@ -1,4 +1,54 @@
 <?php
+// /**
+//  * URL跳转
+//  * @param string $url 跳转地址
+//  * @param int $time 跳转延时(单位:秒)
+//  * @param string $msg 提示语
+//  */
+// function redirect($url, $time = 0, $msg = '') {
+// 	$url = str_replace(array("\n", "\r"), '', $url); // 多行URL地址支持
+// 	if (empty($msg)) {
+// 		$msg = "系统将在 {$time}秒 之后自动跳转到 {$url} ！";
+// 	}
+// 	if (headers_sent()) {
+// 		$str = "<meta http-equiv='Refresh' content='{$time};URL={$url}'>";
+// 		if ($time != 0) {
+// 			$str .= $msg;
+// 		}
+// 		exit($str);
+// 	} else {
+// 		if (0 === $time) {
+// 			header("Location: " . $url);
+// 		} else {
+// 			header("Content-type: text/html; charset=utf-8");
+// 			header("refresh:{$time};url={$url}");
+// 			echo($msg);
+// 		}
+// 		exit();
+// 	}
+// }
+// /**获取当前脚本的url**/
+// function GetCurUrl() 
+// { 
+// 	if(!empty($_SERVER["REQUEST_URI"])) 
+// 	{ 
+// 		$scriptName = $_SERVER["REQUEST_URI"]; 
+// 		$nowurl = $scriptName; 
+// 	} 
+// 	else 
+// 	{ 
+// 		$scriptName = $_SERVER["PHP_SELF"]; 
+// 		if(empty($_SERVER["QUERY_STRING"])) 
+// 		{ 
+// 			$nowurl = $scriptName; 
+// 		} 
+// 		else 
+// 		{ 
+// 			$nowurl = $scriptName."?".$_SERVER["QUERY_STRING"]; 
+// 		} 
+// 	} 
+// 	return $nowurl; 
+// } 
 /**是否是收藏的或者错误的题目**/
 function hasProblem($student_id,$problem_id,$problem_type,$type){
 	$sql = "select * from userproblems where student_id = '".$student_id."' and problem_id = '".$problem_id."' and problem_type = '".$problem_type."' and type = '".$type."'";

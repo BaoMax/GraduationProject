@@ -2,43 +2,6 @@
 	<span class="am-icon-home am-icon-md" id="btn-home" onclick="home()"></span>
 	<h1><?=$title?></h1>
 </header>
-<!-- <div class="section">
-	<div class="container">
-		<div class="row">
-			<div class="col-md-12">
-				<div class="jumbotron">
-					<p style="border:2px solid #000;border-radius:50px;width:50px;height:50px;margin:auto;padding:3px;">
-						<span style="background-color:green;border-radius:40px;width:40px;height:40px;display:inline-block"></span>
-					</p>
-					<p style="font-size:16px;text-align:center"><b><?=$user?></b></p>
-				</div>
-				<div class="panel panel-default" style="margin-top:20px;margin-bottom:10px;">
-					<div style="font-size=20px;width:100%;line-height:300%;padding:0 5px;position:relative">
-	     				<a href="javascript:selectCourse()" style="width:100%;display:inline-block;">课程选择</a>
-	     				<i class="-open fa fa-angle-right fa-fw fa-2x pull-right" style="position:absolute;top:10%;right:2%"></i>
-     				</div>
-				</div>
-				<div class="panel panel-default" style="margin-bottom:10px;">
-					<div style="font-size=20px;width:100%;line-height:300%;padding:0 5px;position:relative">
-	     				<a href="javascript:errorProblems()" style="width:100%;display:inline-block;">错题浏览</a>
-	     				<i class="-open fa fa-angle-right fa-fw fa-2x pull-right" style="position:absolute;top:10%;right:2%"></i>
-     				</div>
-				</div>
-				<div class="panel panel-default" style="margin-bottom:10px;">
-					<div style="font-size=20px;width:100%;line-height:300%;padding:0 5px;position:relative">
-	     				<a href="javascript:scoreList()" style="width:100%;display:inline-block;">我的收藏</a>
-	     				<i class="-open fa fa-angle-right fa-fw fa-2x pull-right" style="position:absolute;top:10%;right:2%"></i>
-     				</div>
-				</div>
-				<div class="panel panel-default" style="margin-bottom:10px;">
-					<div style="font-size=20px;width:100%;line-height:300%;padding:0 5px;position:relative">
-	     				<a href="javascript:logout()" style="width:100%;display:inline-block;color:red;text-align:center;font-weight:bold">退出当前账号</a>
-     				</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</div> -->
 <section>
 	<div class="am-form-group am-form-file" style="width:33.33%;margin:0 auto;margin-top:1rem;">
 		<img class="am-circle" id="idImg" src="static/image/user.jpg" width="100" height="100"/>
@@ -83,7 +46,6 @@
 			};
 			reader.readAsDataURL(file);
 		});
-		// var img = $("#idImg");
 		var img = new Image();
 		function setImageURL(url){
 	    	img.src=url;
@@ -115,27 +77,21 @@
 	function message(){
 
 	}
-	// function scoreList(){
-	// 	var url = window.location.href;
-	//     url = url.slice(0,url.indexOf("?"));
-	//     var student_id = $.cookie("UserName");
-	//     var course_id = $.cookie("key_"+student_id);
-	//     if(course_id){
-	//     	window.location.href = url + "?c=main&a=score&student_id="+student_id+"&course_id="+course_id;
-	//     }else{
-	//     	dialog("当前未选择课程，请先选择课程");
-	//     }
-	// }
 	function logout(){
-	   //  $.cookie("UserName","",{ expires: -1 });
-	   //  $.cookie("Password","",{ expires: -1 });
-	   //  $.cookie("remberBox","",{ expires: -1 });
-	  	// $.cookie("key_"+$.cookie("UserName"),"",{ expires: -1 });
-	  	// $.cookie("value_"+$.cookie("Password"),"",{ expires: -1 });
-	  	// $.cookie("max_"+$.cookie("Password"),"",{ expires: -1 });
+		var pos = window.location.href.indexOf("?");
+	    url = window.location.href.slice(0,pos);
+		$.ajax({
+			url : url + "?c=main&a=logout",
+			type : "post",
+			success:function(data){
+				console.log(data);
+				if(data == "1"){
+					window.location.href = url;
+				}
+			},
+			error:function(){
 
-	   //  var url = window.location.href;
-	   //  url = url.slice(0,url.indexOf("?"));
-	   //  window.location.href = url;
+			}
+		});
 	}
 </script>

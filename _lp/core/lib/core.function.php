@@ -55,7 +55,7 @@ function u( $str )
 
 // render functiones
 function render( $data = NULL , $layout = NULL , $sharp = 'default' )
-{
+{	
 	if( $layout == null )
 	{
 		if( is_ajax_request() )
